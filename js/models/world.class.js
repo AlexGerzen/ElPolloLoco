@@ -1,9 +1,7 @@
 class World {
 
     character = new Character();
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundObjects = level1.backgroundObjects;
+    level = level1;
     ctx;
     canvas;
     keyboard;
@@ -26,9 +24,9 @@ class World {
 
         this.ctx.translate(this.camera_x, 0); // Sorgt dafür das die Kamera sich mitbewegt
 
-        this.addObjectsToMap(this.backgroundObjects); // Hintergrund wird dargestellt
-        this.addObjectsToMap(this.clouds); // Wolken werden dargestellt
-        this.addObjectsToMap(this.enemies); // Hühner werden dargestellt
+        this.addObjectsToMap(this.level.backgroundObjects); // Hintergrund wird dargestellt
+        this.addObjectsToMap(this.level.clouds); // Wolken werden dargestellt
+        this.addObjectsToMap(this.level.enemies); // Hühner werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
 
         this.ctx.translate(-this.camera_x, 0);
