@@ -12,6 +12,7 @@ class Character extends MovableObject {
     currentImage = 0;
     world;
     speed = 10;
+    walking_sound = new Audio('audio/footsteps.wav');
 
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -23,14 +24,17 @@ class Character extends MovableObject {
     animate() {
 
         setInterval( () => {
+            this.walking_sound.pause(); // Pausiert den Sound da dieser sonst immer bis zum ende durchlaudfen würde
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) { 
                 this.x += this.speed // World moving right
                 this.otherDirection = false;
+                this.walking_sound.play(); //Spielt denn walking sound ab
             }
 
             if (this.world.keyboard.LEFT && this.x > 0) { 
                 this.x -= this.speed // World moving left
                 this.otherDirection = true; // Character turn other direction
+                this.walking_sound.play(); //Spielt denn walking sound ab
             }
 
             this.world.camera_x = -this.x + 100; // Gibt die position für die Kamera an
