@@ -7,19 +7,6 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
 
 
-    
-
-    drawFrame(ctx) {
-        // Hitbox zeichnen
-        if (this instanceof Character || this instanceof Chicken) {
-            ctx.beginPath();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
-        }
-    }
-
     moveRight() {
         this.x += this.speed // World moving right
     }
@@ -44,10 +31,14 @@ class MovableObject extends DrawableObject {
     }
 
     isAboveGround() {
-        return this.y < 220;
+        if (this instanceof ThrowableObject) { 
+            return true;
+        } else {
+            return this.y < 220;
+        }
     }
 
-    
+
     isColliding(obj) { // Kollision wird berechnet
         return (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && // Abfrage ob die Kollidieren oder ob das Objekt schon zu weit ist
             (this.y + this.height) >= obj.y &&
@@ -56,7 +47,7 @@ class MovableObject extends DrawableObject {
 
     hit() {
         this.energy -= 5;
-        if(this.energy < 0) {
+        if (this.energy < 0) {
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
@@ -73,5 +64,5 @@ class MovableObject extends DrawableObject {
         return timepassed < 1.5; //Abfrage ob man in den letzten 5sek getroffen wurde
     }
 
-    
+
 }

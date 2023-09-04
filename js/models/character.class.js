@@ -67,7 +67,7 @@ class Character extends MovableObject {
                 this.walking_sound.play(); //Spielt denn walking sound ab
             }
 
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) { // Character springt
+            if (this.world.keyboard.UP && !this.isAboveGround()) { // Character springt
                 this.jump()
             }
 

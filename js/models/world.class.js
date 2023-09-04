@@ -1,6 +1,8 @@
 class World {
 
     character = new Character();
+    statusBar = new Statusbar();
+    throwableObject = new ThrowableObject();
     level = level1;
     ctx;
     canvas;
@@ -13,21 +15,34 @@ class World {
         this.keyboard = keyboard; //Verbindung zur Keyboard Class
         this.draw();
         this.setWorld();
-        this.checkCollisions();
+        this.run();
     }
 
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
     }
 
-    checkCollisions() {
+    run() {
         setInterval(() => {
-            this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy)) {
-                    this.character.hit()
-                }
-            })
-        }, 1000)
+            this.checkCollisions();
+            this.checkThrowObjects();
+        }, 200)
+    }
+
+    checkCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy)) {
+                this.character.hit()
+                this.statusBar.setPercentage(this.character.energy);
+            }
+        })
+    }
+
+    checkThrowObjects() {
+        if(this.keyboard.SPACE) {
+            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+            this.throwableObject = bottle;
+        }
     }
 
     draw() {
@@ -39,6 +54,11 @@ class World {
         this.addObjectsToMap(this.level.clouds); // Wolken werden dargestellt
         this.addObjectsToMap(this.level.enemies); // Hühner werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
+        this.addToMap(this.throwableObject);
+        
+        this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
+        this.addToMap(this.statusBar); // Statusbar wird dargestellt
+        this.ctx.translate(this.camera_x, 0);
 
         this.ctx.translate(-this.camera_x, 0);
 
