@@ -1,7 +1,9 @@
 class World {
 
     character = new Character();
-    statusBar = new Statusbar();
+    statusBarLife = new StatusbarLife();
+    statusBarCoins = new StatusbarCoins();
+    statusBarBottles = new StatusbarBottles();
     throwableObject = new ThrowableObject();
     level = level1;
     ctx;
@@ -57,7 +59,9 @@ class World {
         this.addToMap(this.throwableObject);
         
         this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
-        this.addToMap(this.statusBar); // Statusbar wird dargestellt
+        this.addToMap(this.statusBarLife); // Statusbar wird dargestellt
+        this.addToMap(this.statusBarCoins); // Statusbar wird dargestellt
+        this.addToMap(this.statusBarBottles);
         this.ctx.translate(this.camera_x, 0);
 
         this.ctx.translate(-this.camera_x, 0);
