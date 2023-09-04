@@ -46,6 +46,18 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/idle/I-9.png',
         'img/2_character_pepe/1_idle/idle/I-10.png'
     ];
+    IMAGES_LONG_IDLE = [
+        'img/2_character_pepe/1_idle/long_idle/I-11.png',
+        'img/2_character_pepe/1_idle/long_idle/I-12.png',
+        'img/2_character_pepe/1_idle/long_idle/I-13.png',
+        'img/2_character_pepe/1_idle/long_idle/I-14.png',
+        'img/2_character_pepe/1_idle/long_idle/I-15.png',
+        'img/2_character_pepe/1_idle/long_idle/I-16.png',
+        'img/2_character_pepe/1_idle/long_idle/I-17.png',
+        'img/2_character_pepe/1_idle/long_idle/I-18.png',
+        'img/2_character_pepe/1_idle/long_idle/I-19.png',
+        'img/2_character_pepe/1_idle/long_idle/I-20.png',
+    ];
     currentImage = 0;
     world;
     speed = 10;
@@ -59,6 +71,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_LONG_IDLE);
         this.applyGravity();
         this.animate();
     }
@@ -96,13 +109,13 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_JUMPING)
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // Walk animation nur wenn der Character läuft
                 this.playAnimation(this.IMAGES_WALKING)
+                this.resetTimer('reset');
+            } else if(this.resetTimer() > 3) {
+                this.playAnimation(this.IMAGES_LONG_IDLE) // Animation wenn der Character sich länger nicht bewegt
             } else {
-                this.playAnimation(this.IMAGES_IDLE)
+                this.playAnimation(this.IMAGES_IDLE) // Animation wenn der Character sich nicht bewegt
+                this.startTimer();
             }
-
-
-
-
         }, 1000 / 20);
 
     }

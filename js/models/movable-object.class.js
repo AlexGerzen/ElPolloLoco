@@ -5,6 +5,8 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
+    startTime = 0;
+    isTimerRunning = false;
 
 
     moveRight() {
@@ -31,7 +33,7 @@ class MovableObject extends DrawableObject {
     }
 
     isAboveGround() {
-        if (this instanceof ThrowableObject) { 
+        if (this instanceof ThrowableObject) {
             return true;
         } else {
             return this.y < 220;
@@ -61,8 +63,27 @@ class MovableObject extends DrawableObject {
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
         timepassed = timepassed / 1000; // Differenz in 1000;
-        return timepassed < 1.5; //Abfrage ob man in den letzten 5sek getroffen wurde
+        return timepassed < 1; //Abfrage ob man in den letzten 1sek getroffen wurde
     }
 
+    startTimer() {
+        if (!this.isTimerRunning) {
+            this.startTime = Date.now(); // Startzeitpunkt festlegen
+            this.isTimerRunning = true; // Timer starten
+        }
+    }
+
+    resetTimer(reset) {
+        if (this.isTimerRunning) {
+            if (reset == 'reset') { // Abfrage ob der Timer resetet werden soll
+                this.isTimerRunning = false;
+                return;
+            }
+            let endTime = Date.now()
+            let elapsedSeconds = (endTime - this.startTime) / 1000;
+
+            return elapsedSeconds; // Vergangene Zeit seit dem der Timer gestartet wurde
+        }
+    }
 
 }
