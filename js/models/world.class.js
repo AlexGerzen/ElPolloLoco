@@ -13,10 +13,21 @@ class World {
         this.keyboard = keyboard; //Verbindung zur Keyboard Class
         this.draw();
         this.setWorld();
+        this.checkCollisions();
     }
 
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
+    }
+
+    checkCollisions() {
+        setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                if (this.character.isColliding(enemy)) {
+                    this.character.hit()
+                }
+            })
+        }, 1000)
     }
 
     draw() {
@@ -30,12 +41,12 @@ class World {
         this.addToMap(this.character); // Character wird dargestellt
 
         this.ctx.translate(-this.camera_x, 0);
-        
-        
+
+
 
         // Draw wird immer wieder aufgerufen
         let self = this;
-        requestAnimationFrame(function() {
+        requestAnimationFrame(function () {
             self.draw();
         })
     }
@@ -47,16 +58,27 @@ class World {
     }
 
     addToMap(mo) {
-        if(mo.otherDirection) { // Spiegeld das Bild
-            this.ctx.save(); // Speichert vor dem Spiegeln
-            this.ctx.translate(mo.width, 0);
-            this.ctx.scale(-1, 1);
-            mo.x = mo.x * -1;
+        if (mo.otherDirection) { // Spiegeld das Bild
+            this.flipImage(mo);
         }
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height) // Bild wird dargestellt
-        if(mo.otherDirection) { // Setzt das spiegeln wieder zurück
-            mo.x = mo.x * -1;
-            this.ctx.restore(); 
+
+        mo.draw(this.ctx);
+        mo.drawFrame(this.ctx);
+
+        if (mo.otherDirection) { // Setzt das spiegeln wieder zurück
+            this.flipImageBack(mo);
         }
+    }
+
+    flipImage(mo) {
+        this.ctx.save(); // Speichert vor dem Spiegeln
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
+    }
+
+    flipImageBack(mo) {
+        mo.x = mo.x * -1;
+        this.ctx.restore();
     }
 }
