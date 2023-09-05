@@ -55,8 +55,10 @@ class World {
         this.addObjectsToMap(this.level.backgroundObjects); // Hintergrund wird dargestellt
         this.addObjectsToMap(this.level.clouds); // Wolken werden dargestellt
         this.addObjectsToMap(this.level.enemies); // Hühner werden dargestellt
+        this.addObjectsToMap(this.level.coins) // Coins werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
         this.addToMap(this.throwableObject);
+
         
         this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
         this.addToMap(this.statusBarLife); // Statusbar wird dargestellt
