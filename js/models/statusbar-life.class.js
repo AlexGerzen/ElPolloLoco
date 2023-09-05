@@ -16,6 +16,6 @@ class StatusbarLife extends Statusbar {
         this.y = 0;
         this.height = 60;
         this.width = 200;
-        this.setPercentage(100, this.IMAGES_LIFE);
+        this.setPercentage(this.percentage, this.IMAGES_LIFE);
     }
 }

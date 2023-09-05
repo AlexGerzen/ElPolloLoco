@@ -28,6 +28,8 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
+            // this.statusBarCoins.setPercentage(this.statusBarCoins.coins, this.statusBarCoins.IMAGES_COINS);
+            // this.statusBarBottles.setPercentage(this.statusBarBottles.bottles, this.statusBarBottles.IMAGES_BOTTLES)
         }, 200)
     }
 
@@ -35,7 +37,7 @@ class World {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit()
-                this.statusBar.setPercentage(this.character.energy);
+                this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
             }
         })
     }
@@ -56,6 +58,7 @@ class World {
         this.addObjectsToMap(this.level.clouds); // Wolken werden dargestellt
         this.addObjectsToMap(this.level.enemies); // Hühner werden dargestellt
         this.addObjectsToMap(this.level.coins) // Coins werden dargestellt
+        this.addObjectsToMap(this.level.bottles) // Flaschen werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
         this.addToMap(this.throwableObject);
 
