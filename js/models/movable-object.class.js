@@ -7,6 +7,7 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     startTime = 0;
     isTimerRunning = false;
+    
 
 
     moveRight() {
@@ -86,4 +87,5 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    
 }

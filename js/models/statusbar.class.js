@@ -1,4 +1,5 @@
 class Statusbar extends DrawableObject {
+    item = 0;
 
     constructor() {
         super();

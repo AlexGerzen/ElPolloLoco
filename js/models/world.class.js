@@ -42,9 +42,16 @@ class World {
         })
         this.level.coins.forEach((coin) => { // Kollision mit Coin
             if (this.character.isColliding(coin)) {
-                coin.coinCollected = true;
-                coin.addCoin(this.statusBarCoins);
-                this.statusBarCoins.setPercentage(this.statusBarCoins.coins, this.statusBarCoins.IMAGES_COINS);
+                coin.itemCollected = true;
+                coin.addItem(this.statusBarCoins);
+                this.statusBarCoins.setPercentage(this.statusBarCoins.item, this.statusBarCoins.IMAGES_COINS);
+            }
+        })
+        this.level.bottles.forEach((bottle) => { // Kollision mit Flasche
+            if (this.character.isColliding(bottle)) {
+                bottle.itemCollected = true;
+                bottle.addItem(this.statusBarBottles);
+                this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES);
             }
         })
     }
@@ -53,6 +60,7 @@ class World {
         if (this.keyboard.SPACE) {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwableObject = bottle;
+            this.character.resetTimer('reset');   
         }
     }
 
@@ -98,7 +106,7 @@ class World {
             this.flipImage(mo);
         }
 
-        if(mo.coinCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+        if(mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
             return;
         }
         mo.draw(this.ctx);

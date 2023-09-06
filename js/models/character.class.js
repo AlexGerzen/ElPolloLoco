@@ -101,11 +101,14 @@ class Character extends MovableObject {
 
         setInterval(() => {
             if (this.isDead()) { // Deathanimation wenn der Chracter stirbt
-                this.playAnimation(this.IMAGES_DEAD)
+                this.playAnimation(this.IMAGES_DEAD);
+                this.resetTimer('reset');
             } else if (this.isHurt()) { // Hurt animation wenn der Character verletzt wird
-                this.playAnimation(this.IMAGES_HURT)
+                this.playAnimation(this.IMAGES_HURT);
+                this.resetTimer('reset');
             } else if (this.isAboveGround()) { // Jump animation wenn der Character springt
-                this.playAnimation(this.IMAGES_JUMPING)
+                this.playAnimation(this.IMAGES_JUMPING);
+                this.resetTimer('reset');
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // Walk animation nur wenn der Character läuft
                 this.playAnimation(this.IMAGES_WALKING)
                 this.resetTimer('reset');
