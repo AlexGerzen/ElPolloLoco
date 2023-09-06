@@ -28,22 +28,29 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-            // this.statusBarCoins.setPercentage(this.statusBarCoins.coins, this.statusBarCoins.IMAGES_COINS);
+
             // this.statusBarBottles.setPercentage(this.statusBarBottles.bottles, this.statusBarBottles.IMAGES_BOTTLES)
         }, 200)
     }
 
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
+        this.level.enemies.forEach((enemy) => { // Kollision mit Gegner
             if (this.character.isColliding(enemy)) {
                 this.character.hit()
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
             }
         })
+        this.level.coins.forEach((coin) => { // Kollision mit Coin
+            if (this.character.isColliding(coin)) {
+                coin.coinCollected = true;
+                coin.addCoin(this.statusBarCoins);
+                this.statusBarCoins.setPercentage(this.statusBarCoins.coins, this.statusBarCoins.IMAGES_COINS);
+            }
+        })
     }
 
     checkThrowObjects() {
-        if(this.keyboard.SPACE) {
+        if (this.keyboard.SPACE) {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwableObject = bottle;
         }
@@ -62,7 +69,7 @@ class World {
         this.addToMap(this.character); // Character wird dargestellt
         this.addToMap(this.throwableObject);
 
-        
+
         this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
         this.addToMap(this.statusBarLife); // Statusbar wird dargestellt
         this.addToMap(this.statusBarCoins); // Statusbar wird dargestellt
@@ -91,6 +98,9 @@ class World {
             this.flipImage(mo);
         }
 
+        if(mo.coinCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+            return;
+        }
         mo.draw(this.ctx);
         mo.drawFrame(this.ctx);
 

@@ -3,6 +3,8 @@ class Coins extends MovableObject {
         'img/8_coin/coin_1.png',
         'img/8_coin/coin_2.png'
     ];
+    blocked = false;
+    coinCollected = false;
 
     constructor() {
         super().loadImage('img/8_coin/coin_1.png');
@@ -16,5 +18,16 @@ class Coins extends MovableObject {
         setInterval(() => {
             this.playAnimation(this.IMAGE_COINS)
         }, 700);
+    }
+
+    addCoin(statusbar) { // Funktion damit auch nur eine Münze eingesammelt wird pro Münze
+        if (!this.blocked) {
+            this.blocked = true;
+            statusbar.coins++;
+
+            setTimeout(function () {
+                this.blocked = false;
+            }, 2000);
+        }
     }
 }

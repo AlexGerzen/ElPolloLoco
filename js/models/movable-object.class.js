@@ -44,7 +44,7 @@ class MovableObject extends DrawableObject {
     isColliding(obj) { // Kollision wird berechnet
         return (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && // Abfrage ob die Kollidieren oder ob das Objekt schon zu weit ist
             (this.y + this.height) >= obj.y &&
-            (this.y) <= (obj.y + obj.height)
+            (this.y + 150) <= (obj.y + obj.height)
     }
 
     hit() {

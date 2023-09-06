@@ -109,7 +109,7 @@ class Character extends MovableObject {
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // Walk animation nur wenn der Character läuft
                 this.playAnimation(this.IMAGES_WALKING)
                 this.resetTimer('reset');
-            } else if(this.resetTimer() > 3) {
+            } else if(this.resetTimer() > 5) {
                 this.playAnimation(this.IMAGES_LONG_IDLE) // Animation wenn der Character sich länger nicht bewegt
             } else {
                 this.playAnimation(this.IMAGES_IDLE) // Animation wenn der Character sich nicht bewegt
