@@ -83,12 +83,14 @@ class Character extends MovableObject {
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) { // Character läuft nach rechts
                 this.moveRight();
                 this.otherDirection = false;
+                this.world.throwableObject.otherDirection = false;
                 this.walking_sound.play(); //Spielt denn walking sound ab
             }
 
             if (this.world.keyboard.LEFT && this.x > 0) { //Character läfut nach links
                 this.moveLeft();
                 this.otherDirection = true; // Character turn other direction
+                this.world.throwableObject.otherDirection = true;
                 this.walking_sound.play(); //Spielt denn walking sound ab
             }
 

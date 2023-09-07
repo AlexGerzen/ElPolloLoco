@@ -28,8 +28,6 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-
-            // this.statusBarBottles.setPercentage(this.statusBarBottles.bottles, this.statusBarBottles.IMAGES_BOTTLES)
         }, 200)
     }
 
@@ -39,6 +37,9 @@ class World {
                 this.character.hit()
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
             }
+            if (this.throwableObject.isColliding(enemy)) { // Kollision Flasche mit Gegner
+                console.log('hit');
+            }
         })
         this.level.coins.forEach((coin) => { // Kollision mit Coin
             if (this.character.isColliding(coin)) {
@@ -47,7 +48,7 @@ class World {
                 this.statusBarCoins.setPercentage(this.statusBarCoins.item, this.statusBarCoins.IMAGES_COINS);
             }
         })
-        this.level.bottles.forEach((bottle) => { // Kollision mit Flasche
+        this.level.bottles.forEach((bottle) => { // Einsammeln von Flasche auf dem Boden
             if (this.character.isColliding(bottle)) {
                 bottle.itemCollected = true;
                 bottle.addItem(this.statusBarBottles);
@@ -57,10 +58,17 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.SPACE) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+        if (this.keyboard.SPACE && this.statusBarBottles.item > 0) {
+            let bottle;
+            if (!this.throwableObject.otherDirection) {
+                bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection);
+            } else {
+                bottle = new ThrowableObject(this.character.x, this.character.y + 100, this.throwableObject.otherDirection);
+            }
             this.throwableObject = bottle;
-            this.character.resetTimer('reset');   
+            this.statusBarBottles.item--;
+            this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES)
+            this.character.resetTimer('reset');   // Long Idle animation wird zurückgesetzt
         }
     }
 
@@ -106,11 +114,11 @@ class World {
             this.flipImage(mo);
         }
 
-        if(mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+        if (mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
             return;
         }
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
+        // mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) { // Setzt das spiegeln wieder zurück
             this.flipImageBack(mo);

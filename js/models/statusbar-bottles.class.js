@@ -7,7 +7,6 @@ class StatusbarBottles extends Statusbar {
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/green/80.png',
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/green/100.png'
     ];
-    bottles = 0;
 
     constructor() {
         super();
@@ -16,6 +15,6 @@ class StatusbarBottles extends Statusbar {
         this.y = 100;
         this.height = 60;
         this.width = 200;
-        this.setPercentage(this.bottles, this.IMAGES_BOTTLES);
+        this.setPercentage(this.item, this.IMAGES_BOTTLES);
     }
 }

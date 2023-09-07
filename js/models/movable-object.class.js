@@ -49,7 +49,7 @@ class MovableObject extends DrawableObject {
     }
 
     hit() {
-        this.energy -= 5;
+        this.energy -= 5; // Angabe wie viel Leben pro Hit abgezogen wird
         if (this.energy < 0) {
             this.energy = 0;
         } else {
