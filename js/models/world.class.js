@@ -22,6 +22,7 @@ class World {
 
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
+        this.throwableObject.world = this; // Erlaubt von ThrowableObject Class auf World Class zuzugreifen
     }
 
     run() {
@@ -36,10 +37,10 @@ class World {
             if (this.character.isColliding(enemy)) {
                 this.character.hit()
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
-            }
-            if (this.throwableObject.isColliding(enemy)) { // Kollision Flasche mit Gegner
-                console.log('hit');
-            }
+            }    
+            if(this.throwableObject.isColliding(enemy)) {
+                this.throwableObject.hit = true;
+            }           
         })
         this.level.coins.forEach((coin) => { // Kollision mit Coin
             if (this.character.isColliding(coin)) {
@@ -61,13 +62,13 @@ class World {
         if (this.keyboard.SPACE && this.statusBarBottles.item > 0) {
             let bottle;
             if (!this.throwableObject.otherDirection) {
-                bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection);
+                bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach rechts schmeißen
             } else {
-                bottle = new ThrowableObject(this.character.x, this.character.y + 100, this.throwableObject.otherDirection);
+                bottle = new ThrowableObject(this.character.x, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach links schmeißen
             }
             this.throwableObject = bottle;
-            this.statusBarBottles.item--;
-            this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES)
+            this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
+            this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
             this.character.resetTimer('reset');   // Long Idle animation wird zurückgesetzt
         }
     }
@@ -83,7 +84,7 @@ class World {
         this.addObjectsToMap(this.level.coins) // Coins werden dargestellt
         this.addObjectsToMap(this.level.bottles) // Flaschen werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
-        this.addToMap(this.throwableObject);
+        this.addToMap(this.throwableObject); // Wurfflasche wird dargestellt
 
 
         this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
