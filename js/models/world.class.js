@@ -59,7 +59,8 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.SPACE && this.statusBarBottles.item > 0) {
+        
+        if (this.keyboard.SPACE && this.statusBarBottles.item > 0 && this.throwableObject.timePassed()) {
             let bottle;
             if (!this.throwableObject.otherDirection) {
                 bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach rechts schmeißen
@@ -69,7 +70,8 @@ class World {
             this.throwableObject = bottle;
             this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
             this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
-            this.character.resetTimer('reset');   // Long Idle animation wird zurückgesetzt
+            this.character.resetTimer('reset');// Long Idle animation wird zurückgesetzt
+            this.throwableObject.lastHit = new Date().getTime();
         }
     }
 
@@ -115,10 +117,13 @@ class World {
             this.flipImage(mo);
         }
 
-        if (mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+        if(mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
             return;
         }
+
         mo.draw(this.ctx);
+        
+        
         // mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) { // Setzt das spiegeln wieder zurück

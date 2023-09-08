@@ -7,7 +7,8 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     startTime = 0;
     isTimerRunning = false;
-    
+    onceCounter = 0;
+
 
 
     moveRight() {
@@ -18,18 +19,26 @@ class MovableObject extends DrawableObject {
         this.x -= this.speed // World moving left
     }
 
-    playAnimation(images) {
+    playAnimation(images) { // Animation soll immer wiederholt werden
         let i = this.currentImage % images.length;
         let path = images[i];
         this.img = this.imageCache[path];
         this.currentImage++;
     }
 
+    playAnimationOnce(images) { // Animation soll nur einmal durchgeführt werden
+        if (this.onceCounter < images.length) {
+            let path = images[this.onceCounter];
+            this.img = this.imageCache[path];
+            this.onceCounter++;
+        }
+    }
+
     applyGravity() { // Fallgeschwindigkeit wird berechnet
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0)
                 this.y -= this.speedY;
-                this.speedY -= this.acceleration;
+            this.speedY -= this.acceleration;
         }, 1000 / 30)
     }
 
@@ -61,10 +70,14 @@ class MovableObject extends DrawableObject {
         return this.energy == 0;
     }
 
-    isHurt() {
+    timePassed() {
         let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
         timepassed = timepassed / 1000; // Differenz in 1000;
-        return timepassed < 1; //Abfrage ob man in den letzten 1sek getroffen wurde
+        if (this instanceof ThrowableObject) {
+            return timepassed > 1; // Sicherstellen das man nur eine Flasche pro sekunde werden kann
+        } else {
+            return timepassed < 1; //Abfrage ob man in den letzten 1sek getroffen wurde
+        }
     }
 
     startTimer() {
@@ -87,5 +100,5 @@ class MovableObject extends DrawableObject {
         }
     }
 
-    
+
 }

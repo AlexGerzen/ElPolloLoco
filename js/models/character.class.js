@@ -103,9 +103,9 @@ class Character extends MovableObject {
 
         setInterval(() => {
             if (this.isDead()) { // Deathanimation wenn der Chracter stirbt
-                this.playAnimation(this.IMAGES_DEAD);
+                this.playAnimationOnce(this.IMAGES_DEAD);
                 this.resetTimer('reset');
-            } else if (this.isHurt()) { // Hurt animation wenn der Character verletzt wird
+            } else if (this.timePassed()) { // Hurt animation wenn der Character verletzt wird
                 this.playAnimation(this.IMAGES_HURT);
                 this.resetTimer('reset');
             } else if (this.isAboveGround()) { // Jump animation wenn der Character springt

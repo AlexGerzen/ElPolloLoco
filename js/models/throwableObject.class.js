@@ -11,10 +11,13 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png',
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png',
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
+        'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
+        ''
     ];
     world;
-    hit = false; 
+    hit = false;
+    lastHit = 2;
+
 
 
     constructor(x, y, otherDirection) {
@@ -33,14 +36,17 @@ class ThrowableObject extends MovableObject {
         this.applyGravity();
 
         setInterval(() => {
-            if (!otherDirection) {
-                this.x += 10;
-            } else {
-                this.x -= 10;
-            }
             if (this.hit || this.y > 350) {
-                this.playAnimation(this.BOTTLE_SPLASH_IMAGES);
+                this.speedY = 0;
+                this.playAnimationOnce(this.BOTTLE_SPLASH_IMAGES);
+                // clearInterval(interval);
             } else {
+                if (!otherDirection) {
+                    this.x += 10;
+                } else {
+                    this.x -= 10;
+                }
+
                 this.playAnimation(this.BOTTLE_ROTATE_IMAGES);
             }
         }, 25)
