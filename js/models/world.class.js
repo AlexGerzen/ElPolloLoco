@@ -11,6 +11,7 @@ class World {
     keyboard;
     camera_x = 0; //Kamera position
     bottle_throw_sound = new Audio('audio/bottle_throw.wav');
+    chicken_dead_sound = new Audio('audio/chicken_dead.wav');
     
 
     constructor(canvas, keyboard) {
@@ -31,15 +32,19 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-        }, 200)
+        }, 100)
     }
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => { // Kollision mit Gegner
-            if (this.character.isColliding(enemy)) {
+            if (this.character.isColliding(enemy) && this.character.checkDirectionOfCollision(enemy) == 'hitFromSide' && !enemy.chickenDead) {
                 this.character.hit()
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
             }    
+            if (this.character.isColliding(enemy) && this.character.checkDirectionOfCollision(enemy) == 'hitFromTop' && !enemy.chickenDead) {
+                enemy.chickenDead = true;
+                this.chicken_dead_sound.play();
+            }
             if(this.throwableObject.isColliding(enemy)) {
                 this.throwableObject.hit = true;
             }           
