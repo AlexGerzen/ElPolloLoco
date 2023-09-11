@@ -25,7 +25,8 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-54.png',
         'img/2_character_pepe/5_dead/D-55.png',
         'img/2_character_pepe/5_dead/D-56.png',
-        'img/2_character_pepe/5_dead/D-57.png'
+        'img/2_character_pepe/5_dead/D-57.png',
+        ''
     ];
     IMAGES_HURT = [
         'img/2_character_pepe/4_hurt/H-41.png',
@@ -61,6 +62,8 @@ class Character extends MovableObject {
     world;
     speed = 10;
     walking_sound = new Audio('audio/footsteps.wav');
+    jump_sound = new Audio('audio/jump.wav');
+    hurt_sound = new Audio('audio/hurt.ogg');
 
 
     constructor() {
@@ -96,6 +99,7 @@ class Character extends MovableObject {
 
             if (this.world.keyboard.UP && !this.isAboveGround()) { // Character springt
                 this.jump()
+                this.jump_sound.play();
             }
 
             this.world.camera_x = -this.x + 100; // Gibt die position für die Kamera an
@@ -108,6 +112,7 @@ class Character extends MovableObject {
             } else if (this.timePassed()) { // Hurt animation wenn der Character verletzt wird
                 this.playAnimation(this.IMAGES_HURT);
                 this.resetTimer('reset');
+                this.hurt_sound.play();
             } else if (this.isAboveGround()) { // Jump animation wenn der Character springt
                 this.playAnimation(this.IMAGES_JUMPING);
                 this.resetTimer('reset');

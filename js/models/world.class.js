@@ -10,6 +10,8 @@ class World {
     canvas;
     keyboard;
     camera_x = 0; //Kamera position
+    bottle_throw_sound = new Audio('audio/bottle_throw.wav');
+    
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -69,6 +71,7 @@ class World {
             }
             this.throwableObject = bottle;
             this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
+            this.bottle_throw_sound.play();
             this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
             this.character.resetTimer('reset');// Long Idle animation wird zurückgesetzt
             this.throwableObject.lastHit = new Date().getTime();

@@ -17,6 +17,8 @@ class ThrowableObject extends MovableObject {
     world;
     hit = false;
     lastHit = 2;
+    splash_sound = new Audio ('audio/splash.wav');
+    sound = true;
 
 
 
@@ -39,7 +41,10 @@ class ThrowableObject extends MovableObject {
             if (this.hit || this.y > 350) {
                 this.speedY = 0;
                 this.playAnimationOnce(this.BOTTLE_SPLASH_IMAGES);
-                // clearInterval(interval);
+                if(this.sound) {
+                    this.splash_sound.play();
+                    this.sound = false;
+                }
             } else {
                 if (!otherDirection) {
                     this.x += 10;
