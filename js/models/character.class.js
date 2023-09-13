@@ -115,6 +115,7 @@ class Character extends MovableObject {
             if (this.isDead()) { // Deathanimation wenn der Chracter stirbt
                 this.playAnimationOnce(this.IMAGES_DEAD);
                 this.resetTimer('reset');
+                this.world.gameOverObject.gameOver = true;
             } else if (this.timePassed()) { // Hurt animation wenn der Character verletzt wird
                 this.playAnimation(this.IMAGES_HURT);
                 this.resetTimer('reset');

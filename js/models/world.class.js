@@ -5,6 +5,7 @@ class World {
     statusBarCoins = new StatusbarCoins();
     statusBarBottles = new StatusbarBottles();
     throwableObject = new ThrowableObject();
+    gameOverObject = new GameOver();
     level = level1;
     ctx;
     canvas;
@@ -107,7 +108,12 @@ class World {
 
         this.ctx.translate(-this.camera_x, 0);
 
-
+        if (this.gameOverObject.gameOver) {
+            this.addToMap(this.gameOverObject)
+            setTimeout(() => {
+                this.clearAllIntervals()
+            },1000)
+        }
 
         // Draw wird immer wieder aufgerufen
         let self = this;
@@ -152,4 +158,10 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
+
+    clearAllIntervals() {
+        for (let i = 1; i < 9999; i++) window.clearInterval(i);
+    }
+
+
 }
