@@ -8,6 +8,14 @@ class MovableObject extends DrawableObject {
     startTime = 0;
     isTimerRunning = false;
     onceCounter = 0;
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    };
+    animationOver = false;
+    jumping = false;
 
 
 
@@ -31,14 +39,21 @@ class MovableObject extends DrawableObject {
             let path = images[this.onceCounter];
             this.img = this.imageCache[path];
             this.onceCounter++;
+        } else {
+            this.animationOver = true;
         }
     }
 
     applyGravity() { // Fallgeschwindigkeit wird berechnet
         setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0)
+            if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
-            this.speedY -= this.acceleration;
+                this.speedY -= this.acceleration;
+                this.jumping = true;
+            } else {
+                this.jumping = false;
+            }
+                
         }, 1000 / 30)
     }
 
@@ -52,26 +67,27 @@ class MovableObject extends DrawableObject {
 
 
     isColliding(obj) { // Kollision wird berechnet
-        return (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && // Abfrage ob die Kollidieren oder ob das Objekt schon zu weit ist
-            (this.y + this.height) >= obj.y &&
-            (this.y + 150) <= (obj.y + obj.height)
+        return (this.x + this.width - this.offset.right) >= obj.x + obj.offset.left &&
+            this.x + this.offset.left <= (obj.x + obj.width - obj.offset.right) && // Abfrage ob die Kollidieren oder ob das Objekt schon zu weit ist
+            (this.y + this.height - this.offset.bottom) >= obj.y + obj.offset.top &&
+            (this.y + this.offset.top) <= (obj.y + obj.height - obj.offset.bottom)
     }
 
-    checkDirectionOfCollision(enemy) {
-        // Berechne die Abstände zwischen Spieler und Gegner in x- und y-Richtung
-        let dx = this.x - enemy.x;
-        let dy = this.y + 150 - enemy.y;
+    // checkDirectionOfCollision(enemy) {
+    //     // Berechne die Abstände zwischen Spieler und Gegner in x- und y-Richtung
+    //     let dx = this.x - enemy.x;
+    //     let dy = this.y + 150 - enemy.y;
 
-        if (Math.abs(dx) < this.width / 2 + enemy.width / 2 && // Überprüfen ob es eine Kollision gibt
-            Math.abs(dy) < this.height / 2 + enemy.height / 2) {
-           
-            if (Math.abs(dx) > Math.abs(dy)) { // Überprüfen von welcher Richtung die Kollision erfolgt ist
-                return 'hitFromSide'; // Von der Seite getroffen
-            } else {
-                return 'hitFromTop'; // Von oben getroffen
-            }
-        }
-    }
+    //     if (Math.abs(dx) < this.width / 2 + enemy.width / 2 && // Überprüfen ob es eine Kollision gibt
+    //         Math.abs(dy) < this.height / 2 + enemy.height / 2) {
+
+    //         if (Math.abs(dx) > Math.abs(dy)) { // Überprüfen von welcher Richtung die Kollision erfolgt ist
+    //             return 'hitFromSide'; // Von der Seite getroffen
+    //         } else {
+    //             return 'hitFromTop'; // Von oben getroffen
+    //         }
+    //     }
+    // }
 
     hit() {
         this.energy -= 5; // Angabe wie viel Leben pro Hit abgezogen wird
@@ -92,7 +108,7 @@ class MovableObject extends DrawableObject {
         if (this instanceof ThrowableObject) {
             return timepassed > 1; // Sicherstellen das man nur eine Flasche pro sekunde werden kann
         } else {
-            return timepassed < 1; //Abfrage ob man in den letzten 1sek getroffen wurde
+            return timepassed < 0.5; //Abfrage ob man in den letzten 0.5sek getroffen wurde
         }
     }
 

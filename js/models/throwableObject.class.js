@@ -45,6 +45,10 @@ class ThrowableObject extends MovableObject {
                     this.splash_sound.play();
                     this.sound = false;
                 }
+                if(this.animationOver) { // Flasche wurde nicht mehr dargestellt konnte aber immer noch Chicken killen
+                    this.x = 0;
+                    this.y = 500;
+                }
             } else {
                 if (!otherDirection) {
                     this.x += 10;

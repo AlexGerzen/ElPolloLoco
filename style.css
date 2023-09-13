@@ -3,8 +3,28 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin: 0;
+    background-image: url('img/background.jpg');
 }
 
 canvas {
     background-color: black;
+}
+
+/*  Smartphone  */
+
+@media only screen and (max-width: 720px) {
+    canvas {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-height: 480px) {
+    canvas {
+        height: 100vh;
+    }
+
+    h1 {
+        display: none;
+    }
 }

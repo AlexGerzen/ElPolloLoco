@@ -57,6 +57,12 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/long_idle/I-19.png',
         'img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
+    offset = {
+        top : 120,
+        left: 40,
+        right: 30,
+        bottom: 30,
+    }
     height = 200;
     currentImage = 0;
     world;

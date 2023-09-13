@@ -12,7 +12,7 @@ class World {
     camera_x = 0; //Kamera position
     bottle_throw_sound = new Audio('audio/bottle_throw.wav');
     chicken_dead_sound = new Audio('audio/chicken_dead.wav');
-    
+
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -32,22 +32,25 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-        }, 100)
+        }, 50)
     }
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => { // Kollision mit Gegner
-            if (this.character.isColliding(enemy) && this.character.checkDirectionOfCollision(enemy) == 'hitFromSide' && !enemy.chickenDead) {
+
+            if (this.character.isColliding(enemy) && !this.character.jumping && !enemy.chickenDead) {
                 this.character.hit()
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
-            }    
-            if (this.character.isColliding(enemy) && this.character.checkDirectionOfCollision(enemy) == 'hitFromTop' && !enemy.chickenDead) {
+            } else if (this.character.isColliding(enemy) && this.character.jumping && this.character.speedY < 0 && !enemy.chickenDead) {
                 enemy.chickenDead = true;
                 this.chicken_dead_sound.play();
             }
-            if(this.throwableObject.isColliding(enemy)) {
+
+            if (this.throwableObject.isColliding(enemy) && !enemy.chickenDead) {
                 this.throwableObject.hit = true;
-            }           
+                enemy.chickenDead = true;
+                this.chicken_dead_sound.play();
+            }
         })
         this.level.coins.forEach((coin) => { // Kollision mit Coin
             if (this.character.isColliding(coin)) {
@@ -66,7 +69,6 @@ class World {
     }
 
     checkThrowObjects() {
-        
         if (this.keyboard.SPACE && this.statusBarBottles.item > 0 && this.throwableObject.timePassed()) {
             let bottle;
             if (!this.throwableObject.otherDirection) {
@@ -125,13 +127,13 @@ class World {
             this.flipImage(mo);
         }
 
-        if(mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+        if (mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
             return;
         }
 
         mo.draw(this.ctx);
-        
-        
+
+
         // mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) { // Setzt das spiegeln wieder zurück

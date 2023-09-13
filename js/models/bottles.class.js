@@ -11,5 +11,13 @@ class Bottles extends CollectableItem {
         this.y = 350;
         this.height = 70;
         this.width = 50;
+        this.animate();
     }
+
+    animate() {
+        setInterval(() => {
+            this.playAnimation(this.IMAGE_BOTTLES)
+        }, 700);
+    }
+
 }
