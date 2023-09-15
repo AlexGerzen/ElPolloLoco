@@ -58,7 +58,7 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
     offset = {
-        top : 120,
+        top: 120,
         left: 40,
         right: 30,
         bottom: 30,
@@ -93,19 +93,25 @@ class Character extends MovableObject {
                 this.moveRight();
                 this.otherDirection = false;
                 this.world.throwableObject.otherDirection = false;
-                this.walking_sound.play(); //Spielt denn walking sound ab
+                if (!this.world.mute) {
+                    this.walking_sound.play(); //Spielt denn walking sound ab
+                }
             }
 
             if (this.world.keyboard.LEFT && this.x > 0) { //Character läfut nach links
                 this.moveLeft();
                 this.otherDirection = true; // Character turn other direction
                 this.world.throwableObject.otherDirection = true;
-                this.walking_sound.play(); //Spielt denn walking sound ab
+                if (!this.world.mute) {
+                    this.walking_sound.play(); //Spielt denn walking sound ab
+                }
             }
 
             if (this.world.keyboard.UP && !this.isAboveGround()) { // Character springt
                 this.jump()
-                this.jump_sound.play();
+                if (!this.world.mute) {
+                    this.jump_sound.play();
+                }
             }
 
             this.world.camera_x = -this.x + 100; // Gibt die position für die Kamera an
@@ -119,14 +125,16 @@ class Character extends MovableObject {
             } else if (this.timePassed()) { // Hurt animation wenn der Character verletzt wird
                 this.playAnimation(this.IMAGES_HURT);
                 this.resetTimer('reset');
-                this.hurt_sound.play();
+                if(!this.world.mute) {
+                    this.hurt_sound.play();
+                }
             } else if (this.isAboveGround()) { // Jump animation wenn der Character springt
                 this.playAnimation(this.IMAGES_JUMPING);
                 this.resetTimer('reset');
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // Walk animation nur wenn der Character läuft
                 this.playAnimation(this.IMAGES_WALKING)
                 this.resetTimer('reset');
-            } else if(this.resetTimer() > 5) {
+            } else if (this.resetTimer() > 5) {
                 this.playAnimation(this.IMAGES_LONG_IDLE) // Animation wenn der Character sich länger nicht bewegt
             } else {
                 this.playAnimation(this.IMAGES_IDLE) // Animation wenn der Character sich nicht bewegt

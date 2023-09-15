@@ -8,6 +8,26 @@ function init() {
 
 }
 
+function closeGamerule(id) {
+    document.getElementById(id).classList.add('d-none');
+}
+
+function openGamerule(id) {
+    document.getElementById(id).classList.remove('d-none');
+}
+
+function muteSound(status) {
+    if(status == 'unmute') {
+        document.getElementById('unmute').classList.add('d-none');
+        document.getElementById('mute').classList.remove('d-none');
+        world.mute = true;
+    } else {
+        document.getElementById('mute').classList.add('d-none');
+        document.getElementById('unmute').classList.remove('d-none');
+        world.mute = false;
+    }
+}
+
 window.addEventListener("keydown", (e) => { // Wenn die Taste gedrückt wird, wird sie auf TRUE gesetzte
     if (e.keyCode == 39) {
         keyboard.RIGHT = true;

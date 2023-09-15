@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -5,10 +9,105 @@ body {
     flex-direction: column;
     margin: 0;
     background-image: url('img/background.jpg');
+    height: 100vh;
 }
 
 canvas {
     background-color: black;
+    z-index: 1;
+    display: block;
+    border-radius: 20px;
+}
+
+h1 {
+    position: absolute;
+    bottom: 80%;
+}
+
+.d-none {
+    display: none !important;
+}
+
+#main-container {
+    position: absolute;
+    width: 720px;
+    height: 480px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.ingameOptions img {
+    height: 24px;
+}
+
+.ingameOptions img:hover {
+    cursor: pointer;
+    transform: scale(1.15);
+}
+
+.ingameOptions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+.gamerules-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.gamerules {
+    width: 80%;
+    height: 350px;
+    background-color: #f7c065;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.gamerules div {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    font-weight: 700;
+}
+
+.gamerules img {
+    height: 24px;
+}
+
+.gamerules span {
+    width: 90%;
+    text-align: center;
+    font-weight: 700;
+}
+
+.header {
+    text-decoration: underline;
+    font-size: 24px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close:hover {
+    cursor: pointer;
+    transform: scale(1.15);
 }
 
 /*  Smartphone  */
@@ -16,6 +115,11 @@ canvas {
 @media only screen and (max-width: 720px) {
     canvas {
         width: 100%;
+    }
+
+    #main-container {
+        width: 100%;
+        height: calc(100vw / 1.5);
     }
 }
 
@@ -26,5 +130,21 @@ canvas {
 
     h1 {
         display: none;
+    }
+
+    #main-container {
+        height: 100%;
+        width: calc(100vh * 1.5);
+    }
+}
+
+@media only screen and (max-width: 720px) and (max-height: 480px) {
+    #main-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    canvas {
+        border-radius: 0;
     }
 }

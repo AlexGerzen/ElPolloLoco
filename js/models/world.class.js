@@ -6,6 +6,7 @@ class World {
     statusBarBottles = new StatusbarBottles();
     throwableObject = new ThrowableObject();
     gameOverObject = new GameOver();
+    collectableItem = new CollectableItem();
     level = level1;
     ctx;
     canvas;
@@ -13,6 +14,7 @@ class World {
     camera_x = 0; //Kamera position
     bottle_throw_sound = new Audio('audio/bottle_throw.wav');
     chicken_dead_sound = new Audio('audio/chicken_dead.wav');
+    mute = false;
 
 
     constructor(canvas, keyboard) {
@@ -27,6 +29,7 @@ class World {
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
         this.throwableObject.world = this; // Erlaubt von ThrowableObject Class auf World Class zuzugreifen
+        this.collectableItem.world = this; // Erlaubt von CollectableItem Class auf World Class zuzugreifen
     }
 
     run() {
@@ -44,13 +47,17 @@ class World {
                 this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
             } else if (this.character.isColliding(enemy) && this.character.jumping && this.character.speedY < 0 && !enemy.chickenDead) {
                 enemy.chickenDead = true;
-                this.chicken_dead_sound.play();
+                if (!this.mute) {
+                    this.chicken_dead_sound.play();
+                }
             }
 
             if (this.throwableObject.isColliding(enemy) && !enemy.chickenDead) {
                 this.throwableObject.hit = true;
                 enemy.chickenDead = true;
-                this.chicken_dead_sound.play();
+                if (!this.mute) {
+                    this.chicken_dead_sound.play();
+                }
             }
         })
         this.level.coins.forEach((coin) => { // Kollision mit Coin
@@ -79,7 +86,9 @@ class World {
             }
             this.throwableObject = bottle;
             this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
-            this.bottle_throw_sound.play();
+            if (!this.mute) {
+                this.bottle_throw_sound.play();
+            }
             this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
             this.character.resetTimer('reset');// Long Idle animation wird zurückgesetzt
             this.throwableObject.lastHit = new Date().getTime();
@@ -112,7 +121,7 @@ class World {
             this.addToMap(this.gameOverObject)
             setTimeout(() => {
                 this.clearAllIntervals()
-            },1000)
+            }, 1000)
         }
 
         // Draw wird immer wieder aufgerufen
