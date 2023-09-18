@@ -1,12 +1,10 @@
 class World {
-
     character = new Character();
     statusBarLife = new StatusbarLife();
     statusBarCoins = new StatusbarCoins();
     statusBarBottles = new StatusbarBottles();
     throwableObject = new ThrowableObject();
     gameOverObject = new GameOver();
-    collectableItem = new CollectableItem();
     level = level1;
     ctx;
     canvas;
@@ -29,7 +27,6 @@ class World {
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
         this.throwableObject.world = this; // Erlaubt von ThrowableObject Class auf World Class zuzugreifen
-        this.collectableItem.world = this; // Erlaubt von CollectableItem Class auf World Class zuzugreifen
     }
 
     run() {
@@ -63,14 +60,14 @@ class World {
         this.level.coins.forEach((coin) => { // Kollision mit Coin
             if (this.character.isColliding(coin)) {
                 coin.itemCollected = true;
-                coin.addItem(this.statusBarCoins);
+                coin.addItem(this.statusBarCoins, this.mute);
                 this.statusBarCoins.setPercentage(this.statusBarCoins.item, this.statusBarCoins.IMAGES_COINS);
             }
         })
         this.level.bottles.forEach((bottle) => { // Einsammeln von Flasche auf dem Boden
             if (this.character.isColliding(bottle)) {
                 bottle.itemCollected = true;
-                bottle.addItem(this.statusBarBottles);
+                bottle.addItem(this.statusBarBottles, this.mute);
                 this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES);
             }
         })

@@ -1,23 +1,24 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let fullscreen = false;
 
 function init() {
-    canvas = document.getElementById('canvas'); 
+    canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 
 }
 
-function closeGamerule(id) {
+function closeOption(id) {
     document.getElementById(id).classList.add('d-none');
 }
 
-function openGamerule(id) {
+function openOption(id) {
     document.getElementById(id).classList.remove('d-none');
 }
 
 function muteSound(status) {
-    if(status == 'unmute') {
+    if (status == 'unmute') {
         document.getElementById('unmute').classList.add('d-none');
         document.getElementById('mute').classList.remove('d-none');
         world.mute = true;
@@ -27,6 +28,43 @@ function muteSound(status) {
         world.mute = false;
     }
 }
+
+function setFullscreen() {
+    if(!fullscreen) {
+        let element = document.getElementById('fullscreen');
+        document.getElementById('fullscreenEnter').classList.add('d-none');
+        document.getElementById('fullscreenExit').classList.remove('d-none');
+        enterFullscreen(element);
+    } else {
+        document.getElementById('fullscreenEnter').classList.remove('d-none');
+        document.getElementById('fullscreenExit').classList.add('d-none');
+        exitFullscreen()
+    }
+}
+
+function enterFullscreen(fullscreenElement) {
+    if (fullscreenElement.requestFullscreen) {
+        fullscreenElement.requestFullscreen();
+      } else if (fullscreenElement.mozRequestFullScreen) {
+        fullscreenElement.mozRequestFullScreen();
+      } else if (fullscreenElement.webkitRequestFullscreen) {
+        fullscreenElement.webkitRequestFullscreen();
+      } else if (fullscreenElement.msRequestFullscreen) {
+        fullscreenElement.msRequestFullscreen();
+      }
+    canvas.classList.add('fullscreen');
+    fullscreen = true;
+}
+
+function exitFullscreen() {
+    if(document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+    canvas.classList.remove('fullscreen');
+    fullscreen = false;
+  }
 
 window.addEventListener("keydown", (e) => { // Wenn die Taste gedrückt wird, wird sie auf TRUE gesetzte
     if (e.keyCode == 39) {

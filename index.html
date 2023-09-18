@@ -36,28 +36,32 @@
 
     <h1>El Pollo Loco</h1>
 
-    <canvas id="canvas" width="720" height="480"> </canvas>
+    <div id="fullscreen">
 
-    <div id="main-container">
-        <div class="ingameOptions">
-            <img onclick="openOption('gameRules')" src="img/joystick.png" alt="">
-            <img id="unmute"onclick="muteSound('unmute')" src="img/volume.png" alt="">
-            <img id="mute" class="d-none" onclick="muteSound('mute')" src="img/mute.png" alt="">
-            <img onclick="setFullscreen()" src="img/fullscreen.png" alt="">
-        </div>
+        <canvas id="canvas" width="720" height="480"> </canvas>
 
-        <div id="gameRules" class="gamerules-container d-none">
-            <div class="gamerules">
-                <b class="header">GAME RULES</b>
-                <div><img src="img/arrow-left.png"> Walk left </div>
-                <div><img src="img/arrow-right.png"> Walk right </div>
-                <div><img src="img/arrow-up.png"> Jump </div>
-                <div><img src="img/spacebar.png"> Throw bottle </div>
-                <span>
-                    To finish the game you have to collect all 5 coins and kill the endboss! <br>
-                    You need to have at least 3 bottles to kill the endboss! 
-                </span>
-                <img onclick="closeOption('gameRules')" class="close" src="img/x-mark.png">
+        <div id="main-container">
+            <div class="ingameOptions">
+                <img onclick="openOption('gameRules')" src="img/joystick.png" alt="">
+                <img id="unmute" onclick="muteSound('unmute')" src="img/volume.png" alt="">
+                <img id="mute" class="d-none" onclick="muteSound('mute')" src="img/mute.png" alt="">
+                <img id="fullscreenEnter" onclick="setFullscreen()" src="img/fullscreen-enter.png" alt="">
+                <img id="fullscreenExit" class="d-none" onclick="setFullscreen()" src="img/fullscreen-exit.png" alt="">
+            </div>
+
+            <div id="gameRules" class="gamerules-container d-none">
+                <div class="gamerules">
+                    <b class="header">GAME RULES</b>
+                    <div><img src="img/arrow-left.png"> Walk left </div>
+                    <div><img src="img/arrow-right.png"> Walk right </div>
+                    <div><img src="img/arrow-up.png"> Jump </div>
+                    <div><img src="img/spacebar.png"> Throw bottle </div>
+                    <span>
+                        To finish the game you have to collect all 5 coins and kill the endboss! <br>
+                        You need to have at least 3 bottles to kill the endboss!
+                    </span>
+                    <img onclick="closeOption('gameRules')" class="close" src="img/x-mark.png">
+                </div>
             </div>
         </div>
     </div>
