@@ -2,10 +2,12 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let fullscreen = false;
+let gamePanelOpen = false;
 
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+    addEventListenersToPanel();
 
 }
 
@@ -30,7 +32,7 @@ function muteSound(status) {
 }
 
 function setFullscreen() {
-    if(!fullscreen) {
+    if (!fullscreen) {
         let element = document.getElementById('fullscreen');
         document.getElementById('fullscreenEnter').classList.add('d-none');
         document.getElementById('fullscreenExit').classList.remove('d-none');
@@ -45,26 +47,38 @@ function setFullscreen() {
 function enterFullscreen(fullscreenElement) {
     if (fullscreenElement.requestFullscreen) {
         fullscreenElement.requestFullscreen();
-      } else if (fullscreenElement.mozRequestFullScreen) {
+    } else if (fullscreenElement.mozRequestFullScreen) {
         fullscreenElement.mozRequestFullScreen();
-      } else if (fullscreenElement.webkitRequestFullscreen) {
+    } else if (fullscreenElement.webkitRequestFullscreen) {
         fullscreenElement.webkitRequestFullscreen();
-      } else if (fullscreenElement.msRequestFullscreen) {
+    } else if (fullscreenElement.msRequestFullscreen) {
         fullscreenElement.msRequestFullscreen();
-      }
+    }
     canvas.classList.add('fullscreen');
+    document.getElementById('main-container').classList.add('fullscreen');
     fullscreen = true;
 }
 
 function exitFullscreen() {
-    if(document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if(document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
     }
     canvas.classList.remove('fullscreen');
     fullscreen = false;
-  }
+}
+
+function openGamePanels() {
+    let gamePanels = document.getElementById('gamePanels');
+    if(!gamePanelOpen) {
+        gamePanels.style = "display: flex;"
+        gamePanelOpen = true;
+    } else {
+        gamePanels.style = "display: none;"
+        gamePanelOpen = false;
+    }
+}
 
 window.addEventListener("keydown", (e) => { // Wenn die Taste gedrückt wird, wird sie auf TRUE gesetzte
     if (e.keyCode == 39) {
@@ -109,3 +123,50 @@ window.addEventListener("keyup", (e) => { // Wenn die Taste losgelassen wird, wi
         keyboard.SPACE = false;
     }
 })
+
+function addEventListenersToPanel() {
+    const buttonThrow = document.getElementById("buttonThrow");
+    const jump = document.getElementById("buttonJump");
+    const left = document.getElementById("buttonLeft");
+    const right = document.getElementById("buttonRight");
+
+    left.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        keyboard.LEFT = true;
+    });
+
+    left.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        keyboard.LEFT = false;
+    });
+
+    right.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        keyboard.RIGHT = true;
+    });
+
+    right.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        keyboard.RIGHT = false;
+    });
+
+    jump.addEventListener("touchstart", () => {
+        keyboard.UP = true;
+    });
+
+    jump.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        keyboard.UP = false;
+    });
+
+    buttonThrow.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        keyboard.SPACE = true;
+    });
+
+    buttonThrow.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        keyboard.SPACE = false;
+    });
+}
+

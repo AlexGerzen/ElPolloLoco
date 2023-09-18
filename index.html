@@ -42,7 +42,8 @@
 
         <div id="main-container">
             <div class="ingameOptions">
-                <img onclick="openOption('gameRules')" src="img/joystick.png" alt="">
+                <img onclick="openGamePanels()" src="img/joystick.png" alt="">
+                <img onclick="openOption('gameRules')" src="img/rules.png" alt="">
                 <img id="unmute" onclick="muteSound('unmute')" src="img/volume.png" alt="">
                 <img id="mute" class="d-none" onclick="muteSound('mute')" src="img/mute.png" alt="">
                 <img id="fullscreenEnter" onclick="setFullscreen()" src="img/fullscreen-enter.png" alt="">
@@ -61,6 +62,17 @@
                         You need to have at least 3 bottles to kill the endboss!
                     </span>
                     <img onclick="closeOption('gameRules')" class="close" src="img/x-mark.png">
+                </div>
+            </div>
+
+            <div id="gamePanels">
+                <div>
+                    <button id="buttonJump"> <img src="img/arrow-up.png" alt=""> </button>
+                    <button id="buttonThrow"> <img src="img/bottle.png" alt=""></button>
+                </div>
+                <div>
+                    <button id="buttonLeft"> <img src="img/arrow-left.png" alt=""> </button>
+                    <button id="buttonRight"> <img src="img/arrow-right.png" alt=""> </button>
                 </div>
             </div>
         </div>
