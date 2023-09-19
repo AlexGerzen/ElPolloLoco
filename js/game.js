@@ -6,9 +6,17 @@ let gamePanelOpen = false;
 
 function init() {
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
     addEventListenersToPanel();
+}
 
+function startGame() {
+    world = new World(canvas, keyboard);
+    document.getElementById('startScreen').classList.add('d-none');
+    document.getElementById('startButton').classList.add('d-none');
+}
+
+function restartGame() {
+    location.reload();
 }
 
 function closeOption(id) {
@@ -71,7 +79,7 @@ function exitFullscreen() {
 
 function openGamePanels() {
     let gamePanels = document.getElementById('gamePanels');
-    if(!gamePanelOpen) {
+    if (!gamePanelOpen) {
         gamePanels.style = "display: flex;"
         gamePanelOpen = true;
     } else {

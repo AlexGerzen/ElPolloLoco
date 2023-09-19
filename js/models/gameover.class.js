@@ -10,4 +10,8 @@ class GameOver extends DrawableObject {
         super();
         this.loadImage(this.GAMEOVER_IMAGE)
     }
+
+    askRestartGame() {
+        document.getElementById('restartButton').classList.remove('d-none');
+    }
 }

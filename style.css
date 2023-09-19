@@ -71,6 +71,7 @@ h1 {
     gap: 10px;
     padding-top: 10px;
     padding-right: 10px;
+    z-index: 5;
 }
 
 .gamerules-container{
@@ -125,6 +126,37 @@ h1 {
 }
 
 .close:hover {
+    cursor: pointer;
+    transform: scale(1.15);
+}
+
+#startScreen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+#startScreen img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+#startButton, #restartButton {
+    position: absolute;
+    left: calc(50% - 75px);
+    top: 10%;
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #f8bd5f;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+#startButton:hover, #restartButton:hover {
     cursor: pointer;
     transform: scale(1.15);
 }

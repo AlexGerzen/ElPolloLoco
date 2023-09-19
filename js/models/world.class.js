@@ -118,6 +118,7 @@ class World {
             this.addToMap(this.gameOverObject)
             setTimeout(() => {
                 this.clearAllIntervals()
+                this.gameOverObject.askRestartGame()
             }, 1000)
         }
 
