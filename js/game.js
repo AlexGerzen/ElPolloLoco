@@ -32,7 +32,7 @@ function muteSound(status) {
         document.getElementById('unmute').classList.add('d-none');
         document.getElementById('mute').classList.remove('d-none');
         world.mute = true;
-    } else {
+    } else if(status == 'mute') {
         document.getElementById('mute').classList.add('d-none');
         document.getElementById('unmute').classList.remove('d-none');
         world.mute = false;

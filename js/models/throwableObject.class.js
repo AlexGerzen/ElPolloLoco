@@ -19,6 +19,8 @@ class ThrowableObject extends MovableObject {
     lastHit = 2;
     splash_sound = new Audio ('audio/splash.wav');
     sound = true;
+    mute = true;
+    
 
 
 
@@ -41,7 +43,7 @@ class ThrowableObject extends MovableObject {
             if (this.hit || this.y > 350) {
                 this.speedY = 0;
                 this.playAnimationOnce(this.BOTTLE_SPLASH_IMAGES);
-                if(this.sound && !this.world.mute) {
+                if(this.sound && !this.mute) {
                     this.splash_sound.play();
                     this.sound = false;
                 }

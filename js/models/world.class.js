@@ -3,8 +3,8 @@ class World {
     statusBarLife = new StatusbarLife();
     statusBarCoins = new StatusbarCoins();
     statusBarBottles = new StatusbarBottles();
-    throwableObject = new ThrowableObject();
     gameOverObject = new GameOver();
+    throwableObject = new ThrowableObject();
     level = level1;
     ctx;
     canvas;
@@ -12,7 +12,8 @@ class World {
     camera_x = 0; //Kamera position
     bottle_throw_sound = new Audio('audio/bottle_throw.wav');
     chicken_dead_sound = new Audio('audio/chicken_dead.wav');
-    mute = false;
+    mute = true;
+    endBossDead = false;
 
 
     constructor(canvas, keyboard) {
@@ -26,7 +27,6 @@ class World {
 
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
-        this.throwableObject.world = this; // Erlaubt von ThrowableObject Class auf World Class zuzugreifen
     }
 
     run() {
@@ -71,6 +71,21 @@ class World {
                 this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES);
             }
         })
+
+        this.level.endBoss.forEach((boss) => {
+            if (this.character.isColliding(boss)) {
+                this.character.hit()
+                this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
+            }
+
+            if (this.throwableObject.isColliding(boss)) {
+                this.throwableObject.hit = true;
+                this.addDamage(boss);
+                if(boss.bossDead) {
+                    this.endBossDead = true;
+                }
+            }
+        })
     }
 
     checkThrowObjects() {
@@ -84,7 +99,10 @@ class World {
             this.throwableObject = bottle;
             this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
             if (!this.mute) {
+                this.throwableObject.mute = false;
                 this.bottle_throw_sound.play();
+            } else {
+                this.throwableObject.mute = true;
             }
             this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
             this.character.resetTimer('reset');// Long Idle animation wird zurückgesetzt
@@ -104,6 +122,10 @@ class World {
         this.addObjectsToMap(this.level.bottles) // Flaschen werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
         this.addToMap(this.throwableObject); // Wurfflasche wird dargestellt
+        if (this.character.x > 2900 || this.endBossSpawned) {
+            this.addObjectsToMap(this.level.endBoss);
+            this.endBossSpawned = true;
+        }
 
 
         this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
@@ -114,7 +136,7 @@ class World {
 
         this.ctx.translate(-this.camera_x, 0);
 
-        if (this.gameOverObject.gameOver) {
+        if (this.gameOverObject.gameOver || this.endBossDead) {
             this.addToMap(this.gameOverObject)
             setTimeout(() => {
                 this.clearAllIntervals()
@@ -168,6 +190,17 @@ class World {
 
     clearAllIntervals() {
         for (let i = 1; i < 9999; i++) window.clearInterval(i);
+    }
+
+    addDamage(mo) {
+        if (!mo.blocked) {
+            mo.blocked = true;
+            mo.hit++;            
+            console.log(mo.hit);
+            setTimeout(function () {
+                mo.blocked = false;
+            }, 1000);
+        }
     }
 
 

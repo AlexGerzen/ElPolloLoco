@@ -20,6 +20,7 @@ class DrawableObject {
             this.imageCache[path] = img;
         });
     }
+    
     draw(ctx) {
         try {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height) // Bild wird dargestellt
