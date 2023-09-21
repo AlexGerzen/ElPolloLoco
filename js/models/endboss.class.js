@@ -35,8 +35,8 @@ class Endboss extends MovableObject {
     width = 300;
     y = 45;
     offset = {
-        top: 0,
-        left: 0,
+        top: 20,
+        left: 30,
         right: 0,
         bottom: 0,
     };

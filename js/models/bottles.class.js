@@ -7,7 +7,7 @@ class Bottles extends CollectableItem {
     constructor() {
         super().loadImage('img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
         this.loadImages(this.IMAGE_BOTTLES);
-        this.x = 200 + Math.random() * 2000;
+        this.x = 200 + Math.random() * 3000;
         this.y = 350;
         this.height = 70;
         this.width = 50;

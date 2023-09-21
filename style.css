@@ -136,6 +136,7 @@ h1 {
     bottom: 0;
     right: 0;
     left: 0;
+    z-index: 6;
 }
 
 #startScreen img {
@@ -154,6 +155,7 @@ h1 {
     background-color: #f8bd5f;
     font-weight: 700;
     font-size: 20px;
+    z-index: 7;
 }
 
 #startButton:hover, #restartButton:hover {
