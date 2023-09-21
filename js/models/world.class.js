@@ -14,6 +14,7 @@ class World {
     chicken_dead_sound = new Audio('audio/chicken_dead.wav');
     mute = true;
     endBossDead = false;
+    endBossSpawned = false;
 
 
     constructor(canvas, keyboard) {
@@ -85,6 +86,9 @@ class World {
                     this.endBossDead = true;
                 }
             }
+            if(this.endBossSpawned) {
+                boss.bossSpawned = true;
+            }
         })
     }
 
@@ -122,7 +126,7 @@ class World {
         this.addObjectsToMap(this.level.bottles) // Flaschen werden dargestellt
         this.addToMap(this.character); // Character wird dargestellt
         this.addToMap(this.throwableObject); // Wurfflasche wird dargestellt
-        if (this.character.x > 2900 || this.endBossSpawned) {
+        if (this.character.x > 3300 || this.endBossSpawned) { // Angabe ab wann der Boss spawnen soll
             this.addObjectsToMap(this.level.endBoss);
             this.endBossSpawned = true;
         }
@@ -141,7 +145,7 @@ class World {
             setTimeout(() => {
                 this.clearAllIntervals()
                 this.gameOverObject.askRestartGame()
-            }, 1000)
+            }, 500)
         }
 
         // Draw wird immer wieder aufgerufen
@@ -196,12 +200,9 @@ class World {
         if (!mo.blocked) {
             mo.blocked = true;
             mo.hit++;            
-            console.log(mo.hit);
             setTimeout(function () {
                 mo.blocked = false;
             }, 1000);
         }
     }
-
-
 }
