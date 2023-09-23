@@ -4,29 +4,53 @@ let keyboard = new Keyboard();
 let fullscreen = false;
 let gamePanelOpen = false;
 
+/**
+ * This function is used to initialize what is needed
+ */
 function init() {
     canvas = document.getElementById('canvas');
     addEventListenersToPanel();
 }
 
+/**
+ * This function is used to start the game
+ */
 function startGame() {
     world = new World(canvas, keyboard);
     document.getElementById('startScreen').classList.add('d-none');
     document.getElementById('startButton').classList.add('d-none');
 }
 
+/**
+ * This function is used to restart the game
+ */
 function restartGame() {
     location.reload();
 }
 
+/**
+ * This function is used to close the options
+ * 
+ * @param {string} id This is the id of what will be closed
+ */
 function closeOption(id) {
     document.getElementById(id).classList.add('d-none');
 }
 
+/**
+ * This function is used to open the options
+ * 
+ * @param {string} id This is the id of what will be opened
+ */
 function openOption(id) {
     document.getElementById(id).classList.remove('d-none');
 }
 
+/**
+ * This function is used to mute or unmute the sound
+ * 
+ * @param {string} status This is the current status. It is either "mute" or "unmute"
+ */
 function muteSound(status) {
     if (status == 'unmute') {
         document.getElementById('unmute').classList.add('d-none');
@@ -39,6 +63,9 @@ function muteSound(status) {
     }
 }
 
+/**
+ * This function will set the game to fullscreen or remove the fullscreen
+ */
 function setFullscreen() {
     if (!fullscreen) {
         let element = document.getElementById('fullscreen');
@@ -52,6 +79,11 @@ function setFullscreen() {
     }
 }
 
+/**
+ * This function is used to set the game to fullscreen
+ * 
+ * @param {string} fullscreenElement This is the element which will be shown in fullscreen
+ */
 function enterFullscreen(fullscreenElement) {
     if (fullscreenElement.requestFullscreen) {
         fullscreenElement.requestFullscreen();
@@ -67,6 +99,9 @@ function enterFullscreen(fullscreenElement) {
     fullscreen = true;
 }
 
+/**
+ * This function is used to exit the fullscreen
+ */
 function exitFullscreen() {
     if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -77,6 +112,9 @@ function exitFullscreen() {
     fullscreen = false;
 }
 
+/**
+ * This function will show or hide the gamepanels
+ */
 function openGamePanels() {
     let gamePanels = document.getElementById('gamePanels');
     if (!gamePanelOpen) {
@@ -87,6 +125,7 @@ function openGamePanels() {
         gamePanelOpen = false;
     }
 }
+
 
 window.addEventListener("keydown", (e) => { // Wenn die Taste gedrückt wird, wird sie auf TRUE gesetzte
     if (e.keyCode == 39) {
@@ -132,6 +171,9 @@ window.addEventListener("keyup", (e) => { // Wenn die Taste losgelassen wird, wi
     }
 })
 
+/**
+ * This function will add the eventlisteners to the gamepanels
+ */
 function addEventListenersToPanel() {
     const buttonThrow = document.getElementById("buttonThrow");
     const jump = document.getElementById("buttonJump");

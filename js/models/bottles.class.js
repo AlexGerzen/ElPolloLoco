@@ -14,6 +14,9 @@ class Bottles extends CollectableItem {
         this.animate();
     }
 
+    /**
+     * This function will animate the collectable bottles
+     */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGE_BOTTLES)

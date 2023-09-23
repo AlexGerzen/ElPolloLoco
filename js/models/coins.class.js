@@ -13,6 +13,9 @@ class Coins extends CollectableItem {
         this.animate();
     }
 
+    /**
+     * This function will animate the collectable coins
+     */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGE_COINS)

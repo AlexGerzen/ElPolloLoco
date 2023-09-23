@@ -29,19 +29,49 @@ class Chicken extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function will animate the chicken
+     */
     animate() {
+        this.chickenMovingLeft();
+        this.chickenAnimations();
+    }
+
+    /**
+     * This function will make the chicken move left
+     */
+    chickenMovingLeft() {
         setInterval(() => {
             if (!this.chickenDead) {
                 this.moveLeft();
             }
         }, 1000 / 60) // 60 FPS
+    }
 
+    /**
+     * This function will play the animation that is currently needed
+     */
+    chickenAnimations() {
         setInterval(() => {
             if (!this.chickenDead) {
-                this.playAnimation(this.IMAGES_WALKING)
+                this.chickenWalkingAnimation();
             } else {
-                this.playAnimationOnce(this.IMAGES_DEAD)
+                this.chickenDeadAnimations(); 
             }
         }, 100);
+    }
+
+    /**
+     * This function will animate the chicken when it is walking
+     */
+    chickenWalkingAnimation() {
+        this.playAnimation(this.IMAGES_WALKING)
+    }
+
+    /**
+     * This function will animate the chicken when it is dying
+     */
+    chickenDeadAnimations() {
+        this.playAnimationOnce(this.IMAGES_DEAD)
     }
 }

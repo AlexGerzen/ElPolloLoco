@@ -11,6 +11,9 @@ class GameOver extends DrawableObject {
         this.loadImage(this.GAMEOVER_IMAGE)
     }
 
+    /**
+     * This function will show the restart button after the game is over
+     */
     askRestartGame() {
         document.getElementById('restartButton').classList.remove('d-none');
     }

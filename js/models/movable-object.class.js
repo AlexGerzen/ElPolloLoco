@@ -18,15 +18,25 @@ class MovableObject extends DrawableObject {
     jumping = false;
 
 
-
+    /**
+     * This function will make the Object move right
+     */
     moveRight() {
-        this.x += this.speed // World moving right
+        this.x += this.speed
     }
 
+    /**
+     * This function will make the Object move left
+     */
     moveLeft() {
-        this.x -= this.speed // World moving left
+        this.x -= this.speed
     }
 
+    /**
+     * This function will make an animation out of the images
+     * 
+     * @param {Array} images These are the Images which will be animated
+     */
     playAnimation(images) { // Animation soll immer wiederholt werden
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -34,6 +44,11 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
+    /**
+     * This function will animate the images once
+     * 
+     * @param {Array} images These are the Images which will be animated
+     */
     playAnimationOnce(images) { // Animation soll nur einmal durchgeführt werden
         if (this.onceCounter < images.length) {
             let path = images[this.onceCounter];
@@ -44,9 +59,12 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function will apply gravity to the object
+     */
     applyGravity() { // Fallgeschwindigkeit wird berechnet
         setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0) {
+            if (this.canApplyGravity()) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
                 this.jumping = true;
@@ -57,6 +75,20 @@ class MovableObject extends DrawableObject {
         }, 1000 / 30)
     }
 
+    /**
+     * This function will tell if gravity can be applied
+     * 
+     * @returns It return "true" if the gravity can be applied 
+     */
+    canApplyGravity() {
+        return this.isAboveGround() || this.speedY > 0;
+    }
+
+    /**
+     * This function will tell if the object is above ground
+     * 
+     * @returns It returns "true" if the object is above ground
+     */
     isAboveGround() { // Abfrage ob der Character über dem Boden ist
         if (this instanceof ThrowableObject) {
             return true;
@@ -65,16 +97,24 @@ class MovableObject extends DrawableObject {
         }
     }
 
-
-    isColliding(obj) { // Kollision wird berechnet
+    /**
+     * This function will tell if two obejcts are colliding
+     * 
+     * @param {class} obj The object which its colliding with
+     * @returns It return "true" if the objects are colliding
+     */
+    isColliding(obj) { 
         return (this.x + this.width - this.offset.right) >= obj.x + obj.offset.left &&
-            this.x + this.offset.left <= (obj.x + obj.width - obj.offset.right) && // Abfrage ob die Kollidieren oder ob das Objekt schon zu weit ist
+            this.x + this.offset.left <= (obj.x + obj.width - obj.offset.right) && 
             (this.y + this.height - this.offset.bottom) >= obj.y + obj.offset.top &&
             (this.y + this.offset.top) <= (obj.y + obj.height - obj.offset.bottom)
     }
 
+    /**
+     * This function decrease the energy of the character after a hit
+     */
     hit() {
-        this.energy -= 5; // Angabe wie viel Leben pro Hit abgezogen wird
+        this.energy -= 5; // The amount of damage per hit
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -82,10 +122,20 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function will tell if the character is dead
+     * 
+     * @returns It returns "true" if the character is dead 
+     */
     isDead() {
         return this.energy == 0;
     }
 
+    /**
+     * This function will calculate the time after the last hit
+     * 
+     * @returns It returns "true" if enough time has passed
+     */
     timePassed() {
         let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
         timepassed = timepassed / 1000; // Differenz in 1000;
@@ -96,6 +146,9 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function will start a timer
+     */
     startTimer() {
         if (!this.isTimerRunning) {
             this.startTime = Date.now(); // Startzeitpunkt festlegen
@@ -103,6 +156,12 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function will reset the time and tell how much time has passed
+     * 
+     * @param {string} reset This will tell if the timer should be reseted 
+     * @returns It returns the amount of time since the timer has started
+     */
     resetTimer(reset) {
         if (this.isTimerRunning) {
             if (reset == 'reset') { // Abfrage ob der Timer resetet werden soll

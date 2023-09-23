@@ -84,69 +84,183 @@ class Character extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function will animate the Character
+     */
     animate() {
-
-        setInterval(() => {
-            this.walking_sound.pause(); // Pausiert den Sound da dieser sonst immer bis zum ende durchlaudfen würde
-
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) { // Character läuft nach rechts
-                this.moveRight();
-                this.otherDirection = false;
-                this.world.throwableObject.otherDirection = false;
-                if (!this.world.mute) {
-                    this.walking_sound.play(); //Spielt denn walking sound ab
-                }
-            }
-
-            if (this.world.keyboard.LEFT && this.x > 0) { //Character läfut nach links
-                this.moveLeft();
-                this.otherDirection = true; // Character turn other direction
-                this.world.throwableObject.otherDirection = true;
-                if (!this.world.mute) {
-                    this.walking_sound.play(); //Spielt denn walking sound ab
-                }
-            }
-
-            if (this.world.keyboard.UP && !this.isAboveGround()) { // Character springt
-                this.jump()
-                if (!this.world.mute) {
-                    this.jump_sound.play();
-                }
-            }
-
-            this.world.camera_x = -this.x + 100; // Gibt die position für die Kamera an
-        }, 1000 / 60)
-
-        setInterval(() => {
-            if (this.isDead()) { // Deathanimation wenn der Chracter stirbt
-                this.playAnimationOnce(this.IMAGES_DEAD);
-                this.resetTimer('reset');
-                this.world.gameOverObject.gameOver = true;
-            } else if (this.timePassed()) { // Hurt animation wenn der Character verletzt wird
-                this.playAnimation(this.IMAGES_HURT);
-                this.resetTimer('reset');
-                if(!this.world.mute) {
-                    this.hurt_sound.play();
-                }
-            } else if (this.isAboveGround()) { // Jump animation wenn der Character springt
-                this.playAnimation(this.IMAGES_JUMPING);
-                this.resetTimer('reset');
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // Walk animation nur wenn der Character läuft
-                this.playAnimation(this.IMAGES_WALKING)
-                this.resetTimer('reset');
-            } else if (this.resetTimer() > 5) {
-                this.playAnimation(this.IMAGES_LONG_IDLE) // Animation wenn der Character sich länger nicht bewegt
-            } else {
-                this.playAnimation(this.IMAGES_IDLE) // Animation wenn der Character sich nicht bewegt
-                this.startTimer();
-            }
-        }, 1000 / 20);
-
+        this.characterMoving();
+        this.characterAnimations();
     }
 
-
+    /**
+     * This function lets the character jump
+     */
     jump() {
         this.speedY = 30;
     }
 
+    /**
+     * This functin will let the character move left and right or lets him jump. It also adjusts the camera to the character
+     */
+    characterMoving() {
+        setInterval(() => {
+            this.walking_sound.pause(); // Pausiert den Sound da dieser sonst immer bis zum ende durchlaudfen würde
+
+            if (this.canCharacterMoveRight()) { 
+                this.characterMovingRight();
+            }
+
+            if (this.canCharacterMoveLeft()) { 
+                this.characterMovingLeft();
+            }
+
+            if (this.canCharacterJump()) { 
+                this.characterJumping();
+            }
+
+            this.world.camera_x = -this.x + 100; // Gibt die position für die Kamera an
+        }, 1000 / 60)
+    }
+
+    /**
+     * This function will play the animation that is currently needed
+     */
+    characterAnimations() {
+        setInterval(() => {
+            if (this.isDead()) {
+                this.characterDead();
+            } else if (this.timePassed()) {
+                this.characterHurt();
+            } else if (this.isAboveGround()) { 
+                this.characterJumpingAnimation();
+            } else if (this.ischaracterWalking()) { 
+                this.characterWalkingAnitmation();
+            } else if (this.resetTimer() > 5) {
+                this.characterLongIdleAnimation();
+            } else {
+                this.characterIdleAnimation();
+            }
+        }, 1000 / 20);
+    }
+
+    /**
+     * This function returns if the character is walking
+     * 
+     * @returns It returns "true" if the character is walking
+     */
+    ischaracterWalking() {
+        return this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
+    }
+
+    /**
+     * This function will tell if the charcter is allowed to move right
+     * 
+     * @returns It returns "true" if the character is allowed to move right 
+     */
+    canCharacterMoveRight() {
+        return this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x;
+    }
+
+    /**
+     * This function will tell if the charcter is allowed to move left
+     * 
+     * @returns It returns "true" if the character is allowed to move left
+     */
+    canCharacterMoveLeft() {
+        return this.world.keyboard.LEFT && this.x > 0;
+    }
+
+    /**
+     * This function will tell if the charcter is allowed to jump
+     * 
+     * @returns It returns "true" if the character is allowed to move jump
+     */
+    canCharacterJump() {
+        return this.world.keyboard.UP && !this.isAboveGround();
+    }
+
+    /**
+     * This function makes the character move right
+     */
+    characterMovingRight() {
+        this.moveRight();
+        this.otherDirection = false;
+        this.world.throwableObject.otherDirection = false;
+        if (!this.world.mute) {
+            this.walking_sound.play();
+        }
+    }
+
+    /**
+     * This function makes the character move left
+     */
+    characterMovingLeft() {
+        this.moveLeft();
+        this.otherDirection = true; // Character turn other direction
+        this.world.throwableObject.otherDirection = true;
+        if (!this.world.mute) {
+            this.walking_sound.play(); 
+        }
+    }
+
+    /**
+     * This function makes the character jump
+     */
+    characterJumping() {
+        this.jump();
+        if (!this.world.mute) {
+            this.jump_sound.play();
+        }
+    }
+
+    /**
+     * This function will animate the character dying and ends the game
+     */
+    characterDead() {
+        this.playAnimationOnce(this.IMAGES_DEAD);
+        this.resetTimer('reset');
+        this.world.gameOverObject.gameOver = true;
+    }
+
+    /**
+     * This function will animate the character when he gets hurt
+     */
+    characterHurt() {
+        this.playAnimation(this.IMAGES_HURT);
+        this.resetTimer('reset');
+        if (!this.world.mute) {
+            this.hurt_sound.play();
+        }
+    }
+
+    /**
+     * This function will animate the character when he jumps
+     */
+    characterJumpingAnimation() {
+        this.playAnimation(this.IMAGES_JUMPING);
+        this.resetTimer('reset');
+    }
+
+    /**
+     * This function will animate the character when he walks
+     */
+    characterWalkingAnitmation() {
+        this.playAnimation(this.IMAGES_WALKING)
+        this.resetTimer('reset');
+    }
+
+    /**
+     * This function will animate the character when he is doing nothing
+     */
+    characterIdleAnimation() {
+        this.playAnimation(this.IMAGES_IDLE)
+        this.startTimer();
+    }
+
+    /**
+     * This function will animate the character when he is doing nothing for 5 seconds
+     */
+    characterLongIdleAnimation() {
+        this.playAnimation(this.IMAGES_LONG_IDLE)
+    }
 }

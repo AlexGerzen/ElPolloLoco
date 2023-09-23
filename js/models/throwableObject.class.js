@@ -17,10 +17,10 @@ class ThrowableObject extends MovableObject {
     world;
     hit = false;
     lastHit = 2;
-    splash_sound = new Audio ('audio/splash.wav');
+    splash_sound = new Audio('audio/splash.wav');
     sound = true;
     mute = true;
-    
+
 
 
 
@@ -35,31 +35,76 @@ class ThrowableObject extends MovableObject {
         this.throw(otherDirection);
     }
 
+    /**
+     * This function will throw the bottle
+     * 
+     * @param {boolean} otherDirection This is "true" if the character is facing the other direction
+     */
     throw(otherDirection) {
         this.speedY = 30;
         this.applyGravity();
 
         setInterval(() => {
-            if (this.hit || this.y > 350) {
-                this.speedY = 0;
-                this.playAnimationOnce(this.BOTTLE_SPLASH_IMAGES);
-                if(this.sound && !this.mute) {
-                    this.splash_sound.play();
-                    this.sound = false;
-                }
-                if(this.animationOver) { // Flasche wurde nicht mehr dargestellt konnte aber immer noch Chicken killen
-                    this.x = 0;
-                    this.y = 500;
-                }
+            if (this.canSplash()) {
+                this.makeBottleSplash();
             } else {
-                if (!otherDirection) {
-                    this.x += 10;
-                } else {
-                    this.x -= 10;
-                }
-
-                this.playAnimation(this.BOTTLE_ROTATE_IMAGES);
+                this.bottleMoving(otherDirection);
             }
         }, 25)
+    }
+
+    /**
+     * This function will tell if the bottle can splash
+     * 
+     * @returns It returns "true" if the bottle can splash 
+     */
+    canSplash() {
+        return this.hit || this.y > 350;
+    }
+
+    /**
+     * This function will make the bottle splash
+     */
+    makeBottleSplash() {
+        this.speedY = 0;
+        this.playAnimationOnce(this.BOTTLE_SPLASH_IMAGES);
+        if (this.canPlaySound()) {
+            this.playSound();
+        }
+        if (this.animationOver) { // Flasche wurde nicht mehr dargestellt konnte aber immer noch Chicken killen
+            this.x = 0;
+            this.y = 500;
+        }
+    }
+
+    /**
+     * This function will tell if the sound can be played
+     * 
+     * @returns It returns "true" if the sound can be played
+     */
+    canPlaySound() {
+        return this.sound && !this.mute;
+    }
+
+    /**
+     * This function will play the sound
+     */
+    playSound() {
+        this.splash_sound.play();
+        this.sound = false;
+    }
+
+    /**
+     * This function will make the bottle move in a direction
+     * 
+     * @param {boolean} otherDirection 
+     */
+    bottleMoving(otherDirection) {
+        if (!otherDirection) {
+            this.x += 10;
+        } else {
+            this.x -= 10;
+        }
+        this.playAnimation(this.BOTTLE_ROTATE_IMAGES);
     }
 }

@@ -31,6 +31,11 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/3_attack/G19.png',
         'img/4_enemie_boss_chicken/3_attack/G20.png',
     ];
+    IMAGES_HURT = [
+        'img/4_enemie_boss_chicken/4_hurt/G21.png',
+        'img/4_enemie_boss_chicken/4_hurt/G22.png',
+        'img/4_enemie_boss_chicken/4_hurt/G23.png',
+    ]
     height = 400;
     width = 300;
     y = 45;
@@ -51,42 +56,110 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
         this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
         this.x = 3800;
         this.speed = 0.5;
         this.hit = 0;
         this.animate();
     }
 
+    /**
+     * This function will animate the boss
+     */
     animate() {
+        this.bossModes();
+        this.bossAnimations();
+    }
+
+    /**
+     * This function will declare the mode of the boss
+     */
+    bossModes() {
         setInterval(() => {
-            if(this.bossSpawned && this.x > 3600 && this.mode == 'walking') {
-                this.speed = 1.5;
-                this.moveLeft();
-            } else if(this.bossSpawned && this.x <= 3600 && this.mode == 'walking') {
+            if (this.canBossWalk()) {
+                this.bossWalking()
+            } else if (this.canBossAlert()) {
                 this.mode = 'alert';
-            } else if (this.mode == 'alert') {
-                this.speed = 0;
-                setTimeout(() => {
-                    this.mode = 'attack';
-                }, 1000);
-            } else if( this.mode == 'attack') {
+            } else if (this.isBossAlert()) {
+                this.bossAlertMode();
+            } else if (this.mode == 'attack') {
                 this.speed = 0.5;
                 this.moveLeft();
             }
-            
-        }, 1000 / 60) // 60 FPS
 
+        }, 1000 / 60) // 60 FPS
+    }
+
+    /**
+     * This function will play the animation of the boss which is currently needed
+     */
+    bossAnimations() {
         setInterval(() => {
-            if(this.hit >= 3) {
+            if (this.hit >= 3) {
                 this.playAnimationOnce(this.IMAGES_DEAD);
                 this.bossDead = true;
-            } else if(this.mode == 'walking') {
+            } else if (this.mode == 'walking') {
                 this.playAnimation(this.IMAGES_WALKING);
-            } else if(this.mode == 'alert') {
+            } else if (this.mode == 'alert') {
                 this.playAnimation(this.IMAGES_ALERT);
-            } else if(this.mode == 'attack') {
+            } else if (this.canBossAttack()) {
                 this.playAnimation(this.IMAGES_ATTACK);
             }
         }, 100);
     }
+
+    /**
+     * This function will tell if the boss is allowed to walk
+     * 
+     * @returns It returns "true" if the boss is allowed to walk
+     */
+    canBossWalk() {
+        return this.bossSpawned && this.x > 3600 && this.mode == 'walking';
+    }
+
+    /**
+     * This function will let the boss walk
+     */
+    bossWalking() {
+        this.speed = 1.5;
+        this.moveLeft();
+    }
+
+    /**
+     * This function will tell if the boss is allowed to go in "alert" mode
+     * 
+     * @returns It returns "true" if the boss is allowed to go in "alert" mode 
+     */
+    canBossAlert() {
+        return this.bossSpawned && this.x <= 3600 && this.mode == 'walking';
+    }
+
+    /**
+     * This function will tell if the boss is in "alert" mode
+     * 
+     * @returns It returns "true" if the boss is in "alert" mode 
+     */
+    isBossAlert() {
+        return this.mode == 'alert';
+    }
+
+    /**
+     * This function make the boss alert
+     */
+    bossAlertMode() {
+        this.speed = 0;
+        setTimeout(() => {
+            this.mode = 'attack';
+        }, 1000);
+    }
+
+    /**
+     * This function will tell if the boss is in "attack" mode
+     * 
+     * @returns It returns "true" if the boss is in "attack" mode 
+     */
+    canBossAttack() {
+        return this.mode == 'attack';
+    }
+
 }

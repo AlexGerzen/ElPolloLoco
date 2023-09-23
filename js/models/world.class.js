@@ -26,10 +26,16 @@ class World {
         this.run();
     }
 
+    /**
+     * This function will give acces to world from the class character
+     */
     setWorld() {
         this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
     }
 
+    /**
+     * This function will repeatly check the collisions and if an object is thrown
+     */
     run() {
         setInterval(() => {
             this.checkCollisions();
@@ -37,116 +43,250 @@ class World {
         }, 50)
     }
 
+    /**
+     * This function is used to check the collisions
+     */
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => { // Kollision mit Gegner
+        this.checkCollisionsEnemy();
+        this.checkCollisionsCoins();
+        this.checkCollisionsBottle();
+        this.checkCollisionsEndboss();
+    }
 
-            if (this.character.isColliding(enemy) && !this.character.jumping && !enemy.chickenDead) {
-                this.character.hit()
-                this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
-            } else if (this.character.isColliding(enemy) && this.character.jumping && this.character.speedY < 0 && !enemy.chickenDead) {
-                enemy.chickenDead = true;
-                if (!this.mute) {
-                    this.chicken_dead_sound.play();
-                }
-            }
+    /**
+     * This function is used to check the collisions with the endboss
+     */
+    checkCollisionsEndboss() {
+        this.level.endBoss.forEach((boss) => {
+            this.characterCollidingBoss(boss);
+            this.throwableCollidingBoss(boss);
+            this.endbossIsSpawned(boss);
+        })
+    }
 
-            if (this.throwableObject.isColliding(enemy) && !enemy.chickenDead) {
-                this.throwableObject.hit = true;
-                enemy.chickenDead = true;
-                if (!this.mute) {
-                    this.chicken_dead_sound.play();
-                }
-            }
-        })
-        this.level.coins.forEach((coin) => { // Kollision mit Coin
-            if (this.character.isColliding(coin)) {
-                coin.itemCollected = true;
-                coin.addItem(this.statusBarCoins, this.mute);
-                this.statusBarCoins.setPercentage(this.statusBarCoins.item, this.statusBarCoins.IMAGES_COINS);
-            }
-        })
-        this.level.bottles.forEach((bottle) => { // Einsammeln von Flasche auf dem Boden
+    /**
+     * This function is used to check the collisions between the endboss and the throwable object
+     * @param {object} boss This is the boss it will be checked with
+     */
+    throwableCollidingBoss(boss) {
+        if (this.throwableObject.isColliding(boss)) {
+            this.throwableObject.hit = true;
+            this.addDamage(boss);
+            this.isEndbossDead(boss)
+        }
+    }
+
+    /**
+     * This function will tell if the endboss is dead
+     * 
+     * @param {object} boss This is the endboss object
+     */
+    isEndbossDead(boss) {
+        if (boss.bossDead) {
+            this.endBossDead = true;
+        }
+    }
+
+    /**
+     * This function will tell if the endboss is spawned
+     * 
+     * @param {object} boss This is the endboss object
+     */
+    endbossIsSpawned(boss) {
+        if (this.endBossSpawned) {
+            boss.bossSpawned = true;
+        }
+    }
+
+    /**
+     * This function is used to check the collisions between the character and the endboss
+     * 
+     * @param {object} boss This is the endboss object
+     */
+    characterCollidingBoss(boss) {
+        if (this.character.isColliding(boss)) {
+            this.character.hit()
+            this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
+        }
+    }
+
+    /**
+     * This function is used to check the collisions between the character and the collectable bottle
+     */
+    checkCollisionsBottle() {
+        this.level.bottles.forEach((bottle) => {
             if (this.character.isColliding(bottle)) {
                 bottle.itemCollected = true;
                 bottle.addItem(this.statusBarBottles, this.mute);
                 this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES);
             }
         })
+    }
 
-        this.level.endBoss.forEach((boss) => {
-            if (this.character.isColliding(boss)) {
-                this.character.hit()
-                this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
-            }
-
-            if (this.throwableObject.isColliding(boss)) {
-                this.throwableObject.hit = true;
-                this.addDamage(boss);
-                if(boss.bossDead) {
-                    this.endBossDead = true;
-                }
-            }
-            if(this.endBossSpawned) {
-                boss.bossSpawned = true;
+    /**
+     * This function is used to check the collisions between the character and the collectable coin
+     */
+    checkCollisionsCoins() {
+        this.level.coins.forEach((coin) => {
+            if (this.character.isColliding(coin)) {
+                coin.itemCollected = true;
+                coin.addItem(this.statusBarCoins, this.mute);
+                this.statusBarCoins.setPercentage(this.statusBarCoins.item, this.statusBarCoins.IMAGES_COINS);
             }
         })
     }
 
-    checkThrowObjects() {
-        if (this.keyboard.SPACE && this.statusBarBottles.item > 0 && this.throwableObject.timePassed()) {
-            let bottle;
-            if (!this.throwableObject.otherDirection) {
-                bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach rechts schmeißen
-            } else {
-                bottle = new ThrowableObject(this.character.x, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach links schmeißen
+    /**
+     * This function will check the collisions with the enemy
+     */
+    checkCollisionsEnemy() {
+        this.level.enemies.forEach((enemy) => {
+            this.characterCollisionEnemy(enemy)
+            this.bottleCollisionEnemy(enemy)
+        })
+    }
+
+    /**
+     * This function is used to check the collision between the throwable bottle and the enemy
+     * 
+     * @param {object} enemy This is the enemy to check the collision with
+     */
+    bottleCollisionEnemy(enemy) {
+        if (this.isBottleCollidingChicken(enemy)) {
+            this.bottleKillsChicken(enemy)
+        }
+    }
+
+    /**
+     * This function is used to check the collisions between the character and the enemy
+     * 
+     * @param {object} enemy This is the enemy to check the collision with
+     */
+    characterCollisionEnemy(enemy) {
+        if (this.characterGetsHit(enemy)) {
+            this.characterLoseEnergy();
+        } else if (this.characterKillsChicken(enemy)) {
+            enemy.chickenDead = true;
+            if (!this.mute) {
+                this.chicken_dead_sound.play();
             }
+        }
+    }
+
+    /**
+     * This function is used to kill the chicken
+     * 
+     * @param {object} enemy This is the enemy that will be killed
+     */
+    bottleKillsChicken(enemy) {
+        this.throwableObject.hit = true;
+        enemy.chickenDead = true;
+        if (!this.mute) {
+            this.chicken_dead_sound.play();
+        }
+    }
+
+    /**
+     * This function will tell if the throwable object is colliding with the enemy
+     * 
+     * @param {object} enemy This is the enemy to check the collision with
+     * @returns It return "true" if they´re colliding
+     */
+    isBottleCollidingChicken(enemy) {
+        return this.throwableObject.isColliding(enemy) && !enemy.chickenDead;
+    }
+
+    /**
+     * This function will tell if the character killed the enemy
+     * 
+     * @param {object} enemy This is the enemy to check the collision with
+     * @returns It returns "true" if the character killed the enemy
+     */
+    characterKillsChicken(enemy) {
+        return this.character.isColliding(enemy) && this.character.jumping && this.character.speedY < 0 && !enemy.chickenDead;
+    }
+
+    /**
+     * This function is used to check if the character got hit
+     * 
+     * @param {object} enemy This is the enemy to check the collision with
+     * @returns It returns "true" if the character got hit
+     */
+    characterGetsHit(enemy) {
+        return this.character.isColliding(enemy) && !this.character.jumping && !enemy.chickenDead;
+    }
+
+    /**
+     * This function will make the character lose energy
+     */
+    characterLoseEnergy() {
+        this.character.hit()
+        this.statusBarLife.setPercentage(this.character.energy, this.statusBarLife.IMAGES_LIFE);
+    }
+
+    /**
+     * This function will throw the bottle
+     */
+    checkThrowObjects() {
+        if (this.canThrowObject()) {
+            let bottle = this.throwDirection();
             this.throwableObject = bottle;
             this.statusBarBottles.item--; // Eine Flasche aus dem Inventar entfernen
-            if (!this.mute) {
-                this.throwableObject.mute = false;
-                this.bottle_throw_sound.play();
-            } else {
-                this.throwableObject.mute = true;
-            }
-            this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle wird aktualisiert
-            this.character.resetTimer('reset');// Long Idle animation wird zurückgesetzt
+            this.muteThrow();
+            this.statusBarBottles.setPercentage(this.statusBarBottles.item, this.statusBarBottles.IMAGES_BOTTLES) // Statusbar Bottle will be updated
+            this.character.resetTimer('reset');// Long Idle animation will be resetet
             this.throwableObject.lastHit = new Date().getTime();
         }
     }
 
+    /**
+     * This function will check if a bottle can be thrown
+     * 
+     * @returns It returns "true" if a bottle can be thrown
+     */
+    canThrowObject() {
+        return this.keyboard.SPACE && this.statusBarBottles.item > 0 && this.throwableObject.timePassed();
+    }
+
+    /**
+     * This function will mute the Bottlethrow
+     */
+    muteThrow() {
+        if (!this.mute) {
+            this.throwableObject.mute = false;
+            this.bottle_throw_sound.play();
+        } else {
+            this.throwableObject.mute = true;
+        }
+    }
+
+    /**
+     * This function will check the direction the bottle will be thrown
+     * 
+     * @returns It returns the direction of the throw
+     */
+    throwDirection() {
+        let bottle;
+        if (!this.throwableObject.otherDirection) {
+            bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach rechts schmeißen
+        } else {
+            bottle = new ThrowableObject(this.character.x, this.character.y + 100, this.throwableObject.otherDirection); // Flasche nach links schmeißen
+        }
+
+        return bottle
+    }
+
+    /**
+     * This function will draws all the all the objects in the right order on the canvas
+     */
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Canavas wird gecleart
-
-        this.ctx.translate(this.camera_x, 0); // Sorgt dafür das die Kamera sich mitbewegt
-
-        this.addObjectsToMap(this.level.backgroundObjects); // Hintergrund wird dargestellt
-        this.addObjectsToMap(this.level.clouds); // Wolken werden dargestellt
-        this.addObjectsToMap(this.level.enemies); // Hühner werden dargestellt
-        this.addObjectsToMap(this.level.coins) // Coins werden dargestellt
-        this.addObjectsToMap(this.level.bottles) // Flaschen werden dargestellt
-        this.addToMap(this.character); // Character wird dargestellt
-        this.addToMap(this.throwableObject); // Wurfflasche wird dargestellt
-        if (this.character.x > 3300 || this.endBossSpawned) { // Angabe ab wann der Boss spawnen soll
-            this.addObjectsToMap(this.level.endBoss);
-            this.endBossSpawned = true;
-        }
-
-
-        this.ctx.translate(-this.camera_x, 0); // Kamera wird neu ausgerichtet damit die Statusbar immer zu sehen ist
-        this.addToMap(this.statusBarLife); // Statusbar wird dargestellt
-        this.addToMap(this.statusBarCoins); // Statusbar wird dargestellt
-        this.addToMap(this.statusBarBottles);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); 
         this.ctx.translate(this.camera_x, 0);
-
+        this.objectsToAdd()
+        this.spawnEndboss();
+        this.addStaticObjects();
         this.ctx.translate(-this.camera_x, 0);
-
-        if (this.gameOverObject.gameOver || this.endBossDead) {
-            this.addToMap(this.gameOverObject)
-            setTimeout(() => {
-                this.clearAllIntervals()
-                this.gameOverObject.askRestartGame()
-            }, 500)
-        }
+        this.gameIsOver();
 
         // Draw wird immer wieder aufgerufen
         let self = this;
@@ -155,18 +295,76 @@ class World {
         })
     }
 
+    /**
+     * This function will show the gameover screen
+     */
+    gameIsOver() {
+        if (this.gameOverObject.gameOver || this.endBossDead) {
+            this.addToMap(this.gameOverObject)
+            setTimeout(() => {
+                this.clearAllIntervals()
+                this.gameOverObject.askRestartGame()
+            }, 500)
+        }
+    }
+
+    /**
+     * This function will spawn the endboss
+     */
+    spawnEndboss() {
+        if (this.character.x > 3300 || this.endBossSpawned) { 
+            this.addObjectsToMap(this.level.endBoss);
+            this.endBossSpawned = true;
+        }
+    }
+
+    /**
+     * This function includes all the objects that will be drawn on the canvas
+     */
+    objectsToAdd() {
+        this.addObjectsToMap(this.level.backgroundObjects); 
+        this.addObjectsToMap(this.level.clouds); 
+        this.addObjectsToMap(this.level.enemies); 
+        this.addObjectsToMap(this.level.coins); 
+        this.addObjectsToMap(this.level.bottles); 
+        this.addToMap(this.character); 
+        this.addToMap(this.throwableObject); 
+    }
+
+    /**
+     * This function will add the static objects to the canvas
+     */
+    addStaticObjects() {
+        this.ctx.translate(-this.camera_x, 0);
+        this.addToMap(this.statusBarLife);
+        this.addToMap(this.statusBarCoins);
+        this.addToMap(this.statusBarBottles);
+        this.ctx.translate(this.camera_x, 0);
+    }
+
+    /**
+     * This function will split the array into single objects
+     * 
+     * @param {object} objects Objects that will be added to the map
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         })
     }
 
+    /**
+     * This function will draw the objects on the canvas
+     * 
+     * @param {object} mo This is the object that will be added to the map
+     * @returns It returns if the item is collected so it will not be drawn 
+     */
     addToMap(mo) {
         if (mo.otherDirection) { // Spiegeld das Bild
             this.flipImage(mo);
         }
 
-        if (mo.itemCollected) { //  Wenn die Münze eingesammelt wurde wird sie nicht dargestellt
+        if (mo.itemCollected) { 
             return;
         }
 
@@ -180,6 +378,11 @@ class World {
         }
     }
 
+    /**
+     * This function will flip the image
+     * 
+     * @param {object} mo This is the object that will be flipped
+     */
     flipImage(mo) {
         this.ctx.save(); // Speichert vor dem Spiegeln
         this.ctx.translate(mo.width, 0);
@@ -187,19 +390,32 @@ class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * This function will flip the image back
+     * 
+     * @param {object} mo This is the object that will be flipped back
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
 
+    /**
+     * This function will clear all intervals
+     */
     clearAllIntervals() {
         for (let i = 1; i < 9999; i++) window.clearInterval(i);
     }
 
+    /**
+     * This function will add the damage to the Object
+     * 
+     * @param {object} mo This is the object where the damage will be added
+     */
     addDamage(mo) {
         if (!mo.blocked) {
             mo.blocked = true;
-            mo.hit++;            
+            mo.hit++;
             setTimeout(function () {
                 mo.blocked = false;
             }, 1000);
