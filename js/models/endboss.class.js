@@ -48,6 +48,7 @@ class Endboss extends MovableObject {
     bossDead = false;
     bossSpawned = false;
     mode = 'walking';
+    playHurtAnimation = false;
 
 
     constructor() {
@@ -98,12 +99,16 @@ class Endboss extends MovableObject {
             if (this.hit >= 3) {
                 this.playAnimationOnce(this.IMAGES_DEAD);
                 this.bossDead = true;
-            } else if (this.mode == 'walking') {
-                this.playAnimation(this.IMAGES_WALKING);
-            } else if (this.mode == 'alert') {
-                this.playAnimation(this.IMAGES_ALERT);
-            } else if (this.canBossAttack()) {
-                this.playAnimation(this.IMAGES_ATTACK);
+            } else if (this.playHurtAnimation) {
+                this.playAnimation(this.IMAGES_HURT)
+            } else {
+                if (this.mode == 'walking') {
+                    this.playAnimation(this.IMAGES_WALKING);
+                } else if (this.mode == 'alert') {
+                    this.playAnimation(this.IMAGES_ALERT);
+                } else if (this.canBossAttack()) {
+                    this.playAnimation(this.IMAGES_ATTACK);
+                }
             }
         }, 100);
     }

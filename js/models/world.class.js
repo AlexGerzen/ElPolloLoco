@@ -12,6 +12,8 @@ class World {
     camera_x = 0; //Kamera position
     bottle_throw_sound = new Audio('audio/bottle_throw.wav');
     chicken_dead_sound = new Audio('audio/chicken_dead.wav');
+    game_over_sound = new Audio('audio/gameOver.wav');
+    boss_hurt_sound = new Audio('audio/bossHurt.wav');
     mute = true;
     endBossDead = false;
     endBossSpawned = false;
@@ -20,7 +22,7 @@ class World {
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
-        this.keyboard = keyboard; //Verbindung zur Keyboard Class
+        this.keyboard = keyboard;
         this.draw();
         this.setWorld();
         this.run();
@@ -30,7 +32,7 @@ class World {
      * This function will give acces to world from the class character
      */
     setWorld() {
-        this.character.world = this; // Erlaubt von Character Class auf World Class zuzugreifen
+        this.character.world = this;
     }
 
     /**
@@ -73,6 +75,13 @@ class World {
             this.throwableObject.hit = true;
             this.addDamage(boss);
             this.isEndbossDead(boss)
+            boss.playHurtAnimation = true;
+            if (!this.mute) {
+                this.boss_hurt_sound.play();
+            }
+            setTimeout(() => {
+                boss.playHurtAnimation = false;
+            }, 700)
         }
     }
 
@@ -84,6 +93,9 @@ class World {
     isEndbossDead(boss) {
         if (boss.bossDead) {
             this.endBossDead = true;
+            if (!this.mute) {
+                this.game_over_sound.play();
+            }
         }
     }
 
@@ -280,7 +292,7 @@ class World {
      * This function will draws all the all the objects in the right order on the canvas
      */
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); 
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.objectsToAdd()
         this.spawnEndboss();
@@ -312,7 +324,7 @@ class World {
      * This function will spawn the endboss
      */
     spawnEndboss() {
-        if (this.character.x > 3300 || this.endBossSpawned) { 
+        if (this.character.x > 3300 || this.endBossSpawned) {
             this.addObjectsToMap(this.level.endBoss);
             this.endBossSpawned = true;
         }
@@ -322,13 +334,13 @@ class World {
      * This function includes all the objects that will be drawn on the canvas
      */
     objectsToAdd() {
-        this.addObjectsToMap(this.level.backgroundObjects); 
-        this.addObjectsToMap(this.level.clouds); 
-        this.addObjectsToMap(this.level.enemies); 
-        this.addObjectsToMap(this.level.coins); 
-        this.addObjectsToMap(this.level.bottles); 
-        this.addToMap(this.character); 
-        this.addToMap(this.throwableObject); 
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
+        this.addToMap(this.character);
+        this.addToMap(this.throwableObject);
     }
 
     /**
@@ -364,7 +376,7 @@ class World {
             this.flipImage(mo);
         }
 
-        if (mo.itemCollected) { 
+        if (mo.itemCollected) {
             return;
         }
 
