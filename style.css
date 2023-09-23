@@ -1,5 +1,6 @@
 *{
     box-sizing: border-box;
+    font-family: 'Caveat', cursive;
 }
 
 body {
@@ -24,6 +25,7 @@ canvas {
 h1 {
     position: absolute;
     bottom: 80%;
+    font-size: 50px;
 }
 
 .fullscreen {
