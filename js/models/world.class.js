@@ -17,6 +17,7 @@ class World {
     mute = true;
     endBossDead = false;
     endBossSpawned = false;
+    blocked2 = false;
 
 
     constructor(canvas, keyboard) {
@@ -71,7 +72,7 @@ class World {
      * @param {object} boss This is the boss it will be checked with
      */
     throwableCollidingBoss(boss) {
-        if (this.throwableObject.isColliding(boss)) {
+        if (this.throwableObject.isColliding(boss) && boss.mode == "attack") {
             this.throwableObject.hit = true;
             this.addDamage(boss);
             this.isEndbossDead(boss)
@@ -93,9 +94,6 @@ class World {
     isEndbossDead(boss) {
         if (boss.bossDead) {
             this.endBossDead = true;
-            if (!this.mute) {
-                this.game_over_sound.play();
-            }
         }
     }
 
@@ -313,9 +311,15 @@ class World {
     gameIsOver() {
         if (this.gameOverObject.gameOver || this.endBossDead) {
             this.addToMap(this.gameOverObject)
+            if (!this.mute && !this.blocked2) {
+                this.game_over_sound.play();
+                this.character.walking_sound.pause();
+                this.blocked2 = true; 
+                setTimeout(() => {this.game_over_sound.pause();},2000)
+            }
             setTimeout(() => {
-                this.clearAllIntervals()
-                this.gameOverObject.askRestartGame()
+                this.clearAllIntervals();
+                this.gameOverObject.askRestartGame();
             }, 500)
         }
     }

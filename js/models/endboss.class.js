@@ -84,7 +84,7 @@ class Endboss extends MovableObject {
             } else if (this.isBossAlert()) {
                 this.bossAlertMode();
             } else if (this.mode == 'attack') {
-                this.speed = 0.5;
+                this.setBossSpeed();
                 this.moveLeft();
             }
 
@@ -111,6 +111,16 @@ class Endboss extends MovableObject {
                 }
             }
         }, 100);
+    }
+
+    setBossSpeed() {
+        if(this.hit == 0) {
+            this.speed = 1;
+        } else if(this.hit == 1) {
+            this.speed = 2;
+        } else if(this.hit == 2) {
+            this.speed = 4;
+        }
     }
 
     /**
