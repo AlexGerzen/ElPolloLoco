@@ -3,6 +3,8 @@ let world;
 let keyboard = new Keyboard();
 let fullscreen = false;
 let gamePanelOpen = false;
+let muteStatus = 'unmute';
+let gameStarted = false;
 
 /**
  * This function is used to initialize what is needed
@@ -10,6 +12,7 @@ let gamePanelOpen = false;
 function init() {
     canvas = document.getElementById('canvas');
     addEventListenersToPanel();
+    setMuteStatus();
 }
 
 /**
@@ -19,6 +22,12 @@ function startGame() {
     world = new World(canvas, keyboard);
     document.getElementById('startScreen').classList.add('d-none');
     document.getElementById('startButton').classList.add('d-none');
+    gameStarted = true;
+    if(muteStatus == 'unmute') {
+        world.mute = true;
+    } else {
+        world.mute = false;
+    }
 }
 
 /**
@@ -55,12 +64,22 @@ function muteSound(status) {
     if (status == 'unmute') {
         document.getElementById('unmute').classList.add('d-none');
         document.getElementById('mute').classList.remove('d-none');
-        world.mute = true;
+        if(gameStarted) {world.mute = true;}
+        localStorage.setItem('muteStatus', 'unmute');
     } else if(status == 'mute') {
         document.getElementById('mute').classList.add('d-none');
         document.getElementById('unmute').classList.remove('d-none');
-        world.mute = false;
+        if(gameStarted) {world.mute = false;}
+        localStorage.setItem('muteStatus', 'mute');
     }
+}
+
+/**
+ * This function will get the mute status from the localstorage
+ */
+function setMuteStatus() {
+    muteStatus =  localStorage.getItem('muteStatus');
+    muteSound(muteStatus);
 }
 
 /**
