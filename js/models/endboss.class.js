@@ -49,6 +49,7 @@ class Endboss extends MovableObject {
     bossSpawned = false;
     mode = 'walking';
     playHurtAnimation = false;
+    otherDirection = false;
 
 
     constructor() {
@@ -85,10 +86,21 @@ class Endboss extends MovableObject {
                 this.bossAlertMode();
             } else if (this.mode == 'attack') {
                 this.setBossSpeed();
-                this.moveLeft();
+                this.bossDirection();
             }
 
         }, 1000 / 60) // 60 FPS
+    }
+
+    /**
+     * This function is used to set the direction of the boss
+     */
+    bossDirection() {
+        if(this.otherDirection) {
+            this.moveRight();
+        } else {
+            this.moveLeft();
+        }
     }
 
     /**
@@ -113,6 +125,9 @@ class Endboss extends MovableObject {
         }, 100);
     }
 
+    /**
+     * This function is used to increase the speed after every hit
+     */
     setBossSpeed() {
         if(this.hit == 0) {
             this.speed = 1;

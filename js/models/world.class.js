@@ -98,6 +98,19 @@ class World {
     }
 
     /**
+     * This function is used to set the direction of the boss
+     * 
+     * @param {object} boss This is the endboss object
+     */
+    setBossDirection(boss) {
+        if(this.character.x > boss.x) {
+            boss.otherDirection = true;
+        } else {
+            boss.otherDirection = false;
+        }
+    }
+
+    /**
      * This function will tell if the endboss is spawned
      * 
      * @param {object} boss This is the endboss object
@@ -105,6 +118,7 @@ class World {
     endbossIsSpawned(boss) {
         if (this.endBossSpawned) {
             boss.bossSpawned = true;
+            this.setBossDirection(boss);
         }
     }
 
@@ -379,13 +393,11 @@ class World {
         if (mo.otherDirection) { // Spiegeld das Bild
             this.flipImage(mo);
         }
-
         if (mo.itemCollected) {
             return;
         }
 
         mo.draw(this.ctx);
-
 
         // mo.drawFrame(this.ctx);
 
