@@ -4,6 +4,19 @@ class CollectableItem extends MovableObject {
     coin_sound = new Audio('audio/coin.wav');
     bottle_collect_sound = new Audio('audio/bottle_collect.wav');
 
+    constructor() {
+        super();
+        this.setVolume();
+    }
+
+    /**
+     * This function will lower the s volume of the sounds
+     */
+    setVolume() {
+        this.coin_sound.volume = 0.1;
+        this.bottle_collect_sound.volume = 0.1;
+    }
+
     /**
      * This function will make sure that one item is also collected as one item
      * 

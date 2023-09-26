@@ -33,6 +33,14 @@ class ThrowableObject extends MovableObject {
         this.loadImages(this.BOTTLE_ROTATE_IMAGES);
         this.loadImages(this.BOTTLE_SPLASH_IMAGES);
         this.throw(otherDirection);
+        this.setVolume();
+    }
+
+    /**
+     * This function will lower the s volume of the sounds
+     */
+    setVolume() {
+        this.splash_sound.volume = 0.2;
     }
 
     /**

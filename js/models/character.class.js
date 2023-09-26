@@ -82,6 +82,16 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.applyGravity();
         this.animate();
+        this.setVolume();
+    }
+
+    /**
+     * This function will lower the s volume of the sounds
+     */
+    setVolume() {
+        this.walking_sound.volume = 0.4;
+        this.jump_sound.volume = 0.1;
+        this.hurt_sound.volume = 0.2;
     }
 
     /**

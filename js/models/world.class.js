@@ -27,6 +27,17 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
+        this.setVolume();
+    }
+    
+    /**
+     * This function will lower the s volume of the sounds
+     */
+    setVolume() {
+        this.bottle_throw_sound.volume = 0.2;
+        this.chicken_dead_sound.volume = 0.1;
+        this.game_over_sound.volume = 0.1;
+        this.boss_hurt_sound.volume = 0.2;
     }
 
     /**
